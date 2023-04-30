@@ -43,7 +43,7 @@
 
 <script type="text/babel">
   
-  const { useState, useEffect, useRef } = React;
+  const { useState, useEffect } = React;
 
   function csv_to_obj(csv_header) {
 
@@ -89,16 +89,60 @@
 
   function convert_rtf_to_plain_text(rtf) {
       
+      console.log(rtf);
+  
       rtf = rtf.replace(/\\par[d]?/g, "");
-      
-      return rtf.replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, "").trim();
+
+      console.log(rtf);
+  
+      // rtf = rtf.replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, "").trim();
+
+      console.log(rtf);
+
+      return rtf;
       
   };
 
+  function extract_data(obj_template, text_data) {
 
+      return true;
 
+  };
+
+  function process_data( loaded_files, csv_header ) {
+
+      const cleaned_data_arr = new Array(loaded_files.length);
+
+      console.log("process data #1", loaded_files);
+
+      loaded_files.map( () => console.log("hello") );
+
+      loaded_files.map( (data, index) => {
+	
+	  console.log("iter");
+
+	  cleaned_data_arr[index] = data;
+	  // convert_rtf_to_plain_text(data);
+
+      });
+
+      console.log("process data #2", cleaned_data_arr);
+
+      const data_as_objs = new Array(loaded_files.length);
+
+      cleaned_data_arr.map( (data, index) => {
+
+	  data_as_objs[index] = extract_data(obj_template, data);
+
+      })
+
+      console.log(data_as_objs);
+
+      return data_as_objs;
+
+  };
+      
   function File_upload( { store_loaded_files } ) {
-
 
       function handle_change(event) {
 
@@ -128,29 +172,38 @@
 	      </div>
       )
       
-  }
+  };
 
-  function Process_data( { processed_data, store_processed_data } ) {
-
-  }
-      
   const App = function Main() {
+
+      const [csv_header, set_csv_header] = useState(
+          'forename,surname,dob,phone_a,phone_b,address,postcode,source');
 
       const [loaded_files, store_loaded_files] = useState([]);
 
-      const [processed_data, store_processed_data] = useState([]);
+      const [processed_data, store_processed_data] = useState("test");
 
       useEffect(() => {
 
-	  console.log(loaded_files);
+	  store_processed_data(
+	      process_data(loaded_files, csv_header )
+	  );
+
+	  // console.log(processed_data);
 
       }, [loaded_files]);
 
-      console.log(loaded_files);
-
       return (
+	  <>
+	  
+              <textarea className='short' name='csv_header' defaultValue={csv_header} onChange={event => set_csv_header(event.target.value)} ></textarea>
+              <br/>
+
 	      <File_upload store_loaded_files={store_loaded_files} />
-	      <Process_data store_processed_data={store_processed_data} />
+
+	  { processed_data }
+
+	  </>
       )
 
   };
