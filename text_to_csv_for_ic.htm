@@ -24,9 +24,10 @@
     <h2><strong>How this works</strong></h2>
 
     1. Input the CSV template that the data is to be fit into, or leave it as the default as of 2023 (note: if you make changes, the header names must match the default).   
-    <br>
+    <br><br>
 
     2. Select the file(s) via "Browse..." that are to be fit into it.
+    <br><br>
 
     3. The CSV will be automatically downloaded.
 
@@ -49,25 +50,16 @@
       const obj_template = {};
 
       csv_header.split(',').map(
-	  (field_name) => obj_template[field_name] = ""
-      )
+	  (field_name) => obj_template[field_name] = ""      )
 
       return obj_template;
 
   };
 
-  function convert_rtf_to_plain_text(rtf) {
-      
-      rtf = rtf.replace(/\\par[d]?/g, "");
-      
-      return rtf.replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, "").trim();
-      
-  };
-
   function format_objs(input_csv, data_as_objs) {
 
       const csv_header_arr = input_csv.split(",");
-
+      
       console.log(data_as_objs);
 
       const final_output = new Array(data_as_objs.length + 1);
@@ -95,43 +87,80 @@
 
   };
 
+  function convert_rtf_to_plain_text(rtf) {
+      
+      rtf = rtf.replace(/\\par[d]?/g, "");
+      
+      return rtf.replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, "").trim();
+      
+  };
+
+
+
+  function File_upload( { store_loaded_files } ) {
+
+
+      function handle_change(event) {
+
+	  const file_contents = new Array(event.target.files.length);
+
+	  Array.from(event.target.files).map( (file, index) => {
+	  
+	      const reader = new FileReader();
+	      
+	      reader.onload = function(event) {
+
+		  file_contents[index] = event.target.result;
+
+	      }
+ 
+	      reader.readAsText(file);
+
+	  })
+
+          store_loaded_files(file_contents);
+
+      };
+
+      return(
+	      <div>
+	      <input type="file" onChange={(event) => handle_change(event)} multiple/> 
+	      </div>
+      )
+      
+  }
+
+  function Process_data( { processed_data, store_processed_data } ) {
+
+  }
+      
   const App = function Main() {
 
+      const [loaded_files, store_loaded_files] = useState([]);
+
+      const [processed_data, store_processed_data] = useState([]);
+
+      useEffect(() => {
+
+	  console.log(loaded_files);
+
+      }, [loaded_files]);
+
+      console.log(loaded_files);
+
       return (
-	      <FileUpload />
+	      <File_upload store_loaded_files={store_loaded_files} />
+	      <Process_data store_processed_data={store_processed_data} />
       )
 
   };
       
   const root = ReactDOM.createRoot(document.getElementById('root'));
+  
   root.render(
 	  <App />
   );
 
-
-  function FileUpload() {
-      
-      function handChange(event) {
-	  var file = event.target.files[0];
-	  var reader = new FileReader();
-	  reader.onload = function(event) {
-	      // The file's text will be printed here
-	      console.log(event.target.result)
-	  };
-
-	  reader.readAsText(file);
-      }
-
-
-	  
-    return(
-  <div>
-	    <input type="file" onChange={(event) => handChange(event)} /> 
-</div>
-    )
-      
-  } 
-  
 
 </script>
   
