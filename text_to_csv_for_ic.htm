@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="./css/normalize.css">
+
+<link rel="stylesheet" href="./css/stylize.css">
+
+<title>Text-to-CSV for IC</title>
+
+</head>
+
+<body>
+
+<script src="./js/babel.js"></script>
+<script src="./js/react.development.js"></script>
+<script src="./js/react-dom.development.js"> </script>
+
+  <h1>Text-to-CSV for IC</h1>
+    <h2><strong>How this works</strong></h2>
+
+    1. Input the CSV template that the data is to be fit into, or leave it as the default as of 2023 (note: if you make changes, the header names must match the default).   
+    <br>
+
+    2. Paste the raw data into the next textbox.
+
+    <br><br>
+
+    <strong>Privacy notice:</strong> all data processing is done solely on the computer running this <em>intentionally offline</em> website, via client-side Javascript engines available as part of any modern web browser.
+    <br><br>
+
+    <em>Javascript by Thomas. Framework by React.js v18.2.</em>
+    <br><br><br>
+
+    <div id="root"> </div>
+
+<script type="text/babel">
+  
+  const { useState, useEffect, useRef } = React;
+
+  function csv_to_obj(csv_header) {
+
+      const obj_template = {};
+
+      csv_header.split(',').map(
+	  (field_name) => obj_template[field_name] = ""
+      )
+
+      return obj_template;
+
+  };
+
+  function format_objs(input_csv, data_as_objs) {
+
+      const csv_header_arr = input_csv.split(",");
+
+      console.log(data_as_objs);
+
+      const final_output = new Array(data_as_objs.length + 1);
+
+      final_output[0] = input_csv;
+
+      data_as_objs.map( (obj, index_a) => {
+
+	  const new_row = new Array(csv_header_arr.length);
+	  
+	  csv_header_arr.map( (header, index_b) => {
+
+	      new_row[index_b] = obj[header];
+
+	  })
+
+
+	  final_output[index_a + 1] = new_row.join(",");
+
+      });
+
+      console.log(final_output);
+      
+      return final_output.join("\n");
+
+  };
+
+  const App = function Main() {
+
+      return (
+	      <FileUpload />
+      )
+
+  };
+      
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(
+	  <App />
+  );
+
+
+  function FileUpload() {
+      
+      function handChange(event) {
+	  var file = event.target.files[0];
+	  var reader = new FileReader();
+	  reader.onload = function(event) {
+	      // The file's text will be printed here
+	      console.log(event.target.result)
+	  };
+
+	  reader.readAsText(file);
+      }
+
+
+	  
+    return(
+  <div>
+	    <input type="file" onChange={(event) => handChange(event)} /> 
+</div>
+    )
+      
+  } 
+  
+
+</script>
+  
+  
+</body>
+
+</html>

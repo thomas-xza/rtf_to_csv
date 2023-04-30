@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="./css/normalize.css">
+
+<link rel="stylesheet" href="./css/stylize.css">
+
+<title>Text-to-CSV for QuitM</title>
+
+</head>
+
+<body>
+
+<script src="./js/babel.js"></script>
+<script src="./js/react.development.js"></script>
+<script src="./js/react-dom.development.js"> </script>
+
+  <h1>Text-to-CSV for QuitM</h1>
+    <h2><strong>How this works</strong></h2>
+
+    1. Input the CSV template that the data is to be fit into, or leave it as the default as of 2023 (note: if you make changes, the header names must match the default).   
+    <br>
+
+    2. Paste the raw data into the next textbox.
+
+    <br><br>
+
+    <strong>Privacy notice:</strong> all data processing is done solely on the computer running this <em>intentionally offline</em> website, via client-side Javascript engines available as part of any modern web browser.
+    <br><br>
+
+    <em>Javascript by Thomas. Framework by React.js v18.2.</em>
+    <br><br><br>
+
+    <div id="root"> </div>
+
+<script type="text/babel">
+  
+  const { useState, useEffect } = React;
+
+  function Output_json_textbox({ output_json }) {
+
+      // console.log(output_json);
+ 
+      return (
+	      <textarea className='long' name='output_json' value={JSON.stringify(output_json).replaceAll(",",",\n").replaceAll("{","{\n").replaceAll("}","\n}")} readOnly></textarea>
+      );
+      
+  };
+
+  function csv_to_obj(csv_header) {
+
+      const obj = {};
+
+      csv_header.split(',').map(
+	  (field_name) => obj[field_name] = ""
+      )
+
+      return obj;
+
+  }
+
+  function create_objs(obj_template, input_data) {
+
+      console.log(input_data);
+
+      const rows_arr = input_data.match(/R[0-9]{6}.*(\n.*){9}/g);
+
+      console.log(rows_arr);
+
+      const objs_arr = new Array(rows_arr.length);
+
+      rows_arr.map( (line, index) => {
+
+	  const row = line.split("\n");
+
+	  objs_arr[index] = {};
+
+	  Object.assign(objs_arr[index], obj_template);
+
+	  objs_arr[index]["forename"] = row[2].split(' ')[0];
+
+	  objs_arr[index]["surname"] = row[2].split(' ')[1];
+
+	  objs_arr[index]["dob"] = row[3];
+
+	  objs_arr[index]["phone_a"] = row[5];
+
+	  objs_arr[index]["phone_b"] = row[6];
+
+	  objs_arr[index]["address"] = row[7].split(',')[0];
+
+	  objs_arr[index]["postcode"] = row[7].split(',').at(-1);
+
+      });
+
+      return objs_arr;
+
+  }
+
+  function format_objs(input_csv, data_as_objs) {
+
+      const csv_header_arr = input_csv.split(",");
+
+      console.log(data_as_objs);
+
+      const final_output = new Array(data_as_objs.length + 1);
+
+      final_output[0] = input_csv;
+
+      data_as_objs.map( (obj, index_a) => {
+
+	  const new_row = new Array(csv_header_arr.length);
+
+	  csv_header_arr.map( (header, index_b) => {
+
+	      new_row[index_b] = obj[header];
+
+	  })
+
+
+	  final_output[index_a + 1] = new_row.join(",");
+
+      });
+
+      console.log(final_output);
+      
+      return final_output.join("\n");
+
+  }
+
+  const App = function Main() {
+
+      const [input_csv, set_template] = useState(
+	  'forename,surname,dob,phone_a,phone_b,address,postcode,source'
+      );
+
+      const sample_paste = `R002089
+26/04/2023
+FORENAME1 SURNAME1
+01/01/1990
+Female
+07777777777
+07666666666
+FLAT A SOME HOUSE,10 BLAH STREET,SE15 1EE
+Client Agreed to Service In Principle
+26/04/2023
+R002088
+25/04/2023
+FORENAME2 SURNAME2
+01/01/1980
+Female
+07555555555
+07444444444
+10B WINDING ROAD,LONDON,SE14 5AB
+Client Agreed to Service In Principle
+26/04/2023
+`
+ 
+      const [input_data, set_data_in] = useState(sample_paste);
+
+      const [output_data, set_data_out] = useState('');
+      
+      const [output_json, set_data_json] = useState({});
+      
+      useEffect( () => {
+
+	  reload_output();
+
+      }, [input_csv, input_data]
+	       );
+
+      function handle_change_csv(value) {
+
+	  set_template(value);
+
+	  reload_output()
+
+      };
+      
+      function handle_change_data(value) {
+
+	  set_data_in(value);
+
+	  reload_output()
+
+      };
+      
+      function reload_output() {
+
+	  // console.log(input_data);
+
+	  const obj_template = csv_to_obj(input_csv);
+
+	  const objs_arr = create_objs(obj_template, input_data);
+
+	  const final_output = format_objs(input_csv, objs_arr);
+
+	  set_data_json(objs_arr);
+	  
+	  set_data_out([final_output]);
+
+      };
+
+      function download_button() {
+
+	  // console.log(output_data);
+
+	  const file = new Blob([ [input_csv, ...output_data].join("\n") ], { type: 'text/csv' });
+
+	  const element = document.createElement("a");
+	  
+	  element.href = URL.createObjectURL(file);
+
+	  const date = new Date();
+	  
+	  element.download = 'qm_data_' + date.getFullYear() + '_' + date.getMonth() + '_' + date.getDate() + '.csv';
+	  
+	  document.body.appendChild(element);
+	  
+	  element.click();
+
+      }
+      
+      return (
+	      <div>
+
+	  CSV header template, for final output: <br/>
+	      <textarea className='short' name='input_csv' defaultValue={input_csv} onChange={event => handle_change_csv(event.target.value)} ></textarea>
+	      <br/>
+
+	  Raw non-CSV data from QuitM (via paste): <br/>
+	      <textarea className='long' name='input_data' defaultValue={input_data} onChange={event => handle_change_data(event.target.value)} ></textarea>
+	      <br/>
+	      
+	  Output CSV: <br/>
+	      <textarea className='long' name='output_data' value={output_data} readOnly></textarea> <br/>
+	      <button id="download_button" value="download" onClick={download_button}>Download CSV</button>
+	      <br/>
+	      
+	  Raw JSON data structures: <br/>
+	      <Output_json_textbox output_json={output_json} />
+	      
+	  </div>
+      );
+      
+  };
+
+  
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(
+	  <App />
+  );
+
+
+</script>
+  
+  
+</body>
+
+</html>
