@@ -20,13 +20,15 @@
 <script src="./js/react.development.js"></script>
 <script src="./js/react-dom.development.js"> </script>
 
-  <h1>Text-to-CSV for IC</h1>
+  <h1>RTF-to-CSV for IC</h1>
     <h2><strong>How this works</strong></h2>
 
     1. Input the CSV template that the data is to be fit into, or leave it as the default as of 2023 (note: if you make changes, the header names must match the default).   
     <br>
 
-    2. Paste the raw data into the next textbox.
+    2. Select the file(s) via "Browse..." that are to be fit into it.
+
+    3. The CSV will be automatically downloaded.
 
     <br><br>
 
@@ -52,6 +54,14 @@
 
       return obj_template;
 
+  };
+
+  function convert_rtf_to_plain_text(rtf) {
+      
+      rtf = rtf.replace(/\\par[d]?/g, "");
+      
+      return rtf.replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, "").trim();
+      
   };
 
   function format_objs(input_csv, data_as_objs) {
