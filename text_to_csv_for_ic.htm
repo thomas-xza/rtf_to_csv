@@ -109,62 +109,100 @@
 
   };
 
-  function process_data( loaded_files, csv_header ) {
+  function process_data(loaded_files, store_processed_data) {
 
       const cleaned_data_arr = new Array(loaded_files.length);
 
       console.log("process data #1", loaded_files);
 
-      loaded_files.map( () => console.log("hello") );
+      console.log(["test"]);
 
-      loaded_files.map( (data, index) => {
+      // loaded_files.map( () => console.log("hello") );
+
+      // loaded_files.map( (data, index) => {
 	
-	  console.log("iter");
+      // 	  console.log("iter");
 
-	  cleaned_data_arr[index] = data;
-	  // convert_rtf_to_plain_text(data);
+      // 	  cleaned_data_arr[index] = data;
+      // 	  // convert_rtf_to_plain_text(data);
 
-      });
+      // });
 
-      console.log("process data #2", cleaned_data_arr);
+      // console.log("process data #2", cleaned_data_arr);
 
-      const data_as_objs = new Array(loaded_files.length);
+      // const data_as_objs = new Array(loaded_files.length);
 
-      cleaned_data_arr.map( (data, index) => {
+      // // cleaned_data_arr.map( (data, index) => {
 
-	  data_as_objs[index] = extract_data(obj_template, data);
+      // // 	  data_as_objs[index] = extract_data(obj_template, data);
 
-      })
+      // // })
 
-      console.log(data_as_objs);
+      // console.log(data_as_objs);
 
-      return data_as_objs;
+      // return data_as_objs;
 
   };
       
-  function File_upload( { store_loaded_files } ) {
+  function File_upload( {preloaded_files, store_preloaded_files, loaded_files, store_loaded_files} ) {
 
-      function handle_change(event) {
+      //  https://blog.logrocket.com/using-filereader-api-preview-images-react/
 
-	  const file_contents = new Array(event.target.files.length);
+      function handle_change(e) {
+
+	  const files = e.target.files;
+
+	  console.log(files);
+
+	  const file_arr = new Array(event.target.files.length);
 
 	  Array.from(event.target.files).map( (file, index) => {
-	  
-	      const reader = new FileReader();
 	      
-	      reader.onload = function(event) {
+		  file_arr[index] = file;
 
-		  file_contents[index] = event.target.result;
+	  });
 
-	      }
- 
-	      reader.readAsText(file);
+	  console.log(file_arr);
 
-	  })
-
-          store_loaded_files(file_contents);
+	  store_preloaded_files(file_arr);
 
       };
+
+      useEffect( () => {
+
+	  console.log("preloaded_files", preloaded_files);
+
+	  const open_files = new Array(preloaded_files.length);
+
+	  const fileReaders = new Array(preloaded_files.length);
+
+	  if (preloaded_files.length) {
+	      
+	      preloaded_files.forEach((file, index) => {
+		  
+		  fileReaders[index] = new FileReader();
+		  
+		  fileReaders[index].onload = (e) => {
+		      
+		      const { result } = e.target;
+		      
+		      if (result) {
+			  
+			  open_files[index] = result;
+			  
+		      }
+		      
+		      store_loaded_files(open_files);
+			  
+		  }
+		  
+		  fileReaders[index].readAsText(file);
+		  
+	      })
+	      
+	  };
+	  
+      }, [preloaded_files]);
 
       return(
 	      <div>
@@ -179,19 +217,25 @@
       const [csv_header, set_csv_header] = useState(
           'forename,surname,dob,phone_a,phone_b,address,postcode,source');
 
+      const [preloaded_files, store_preloaded_files] = useState([]);
+
       const [loaded_files, store_loaded_files] = useState([]);
 
-      const [processed_data, store_processed_data] = useState("test");
+      const [processed_data, store_processed_data] = useState([]);
 
       useEffect(() => {
 
-	  store_processed_data(
-	      process_data(loaded_files, csv_header )
-	  );
+	  console.log("loaded_files changed");
 
-	  // console.log(processed_data);
+	  process_data(loaded_files, store_processed_data)
 
       }, [loaded_files]);
+
+      // useEffect(() => {
+
+      // 	  console.log("useEffect #2", processed_data);
+
+      // }, [processed_data]);
 
       return (
 	  <>
@@ -199,9 +243,7 @@
               <textarea className='short' name='csv_header' defaultValue={csv_header} onChange={event => set_csv_header(event.target.value)} ></textarea>
               <br/>
 
-	      <File_upload store_loaded_files={store_loaded_files} />
-
-	  { processed_data }
+	      <File_upload preloaded_files={preloaded_files} store_preloaded_files={store_preloaded_files} loaded_files={loaded_files} store_loaded_files={store_loaded_files} />
 
 	  </>
       )
