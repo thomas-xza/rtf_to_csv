@@ -148,27 +148,13 @@
 
       //  https://blog.logrocket.com/using-filereader-api-preview-images-react/
 
-      function handle_change(e) {
+      function handle_change(event) {
 
-	  const files = e.target.files;
-
-	  console.log(files);
-
-	  const file_arr = new Array(event.target.files.length);
-
-	  Array.from(event.target.files).map( (file, index) => {
-	      
-		  file_arr[index] = file;
-
-	  });
-
-	  console.log(file_arr);
-
-	  store_preloaded_files(file_arr);
+	  store_preloaded_files(Array.from(event.target.files));
 
       };
 
-      useEffect( () => {
+      useEffect(() => {
 
 	  console.log("preloaded_files", preloaded_files);
 
@@ -181,6 +167,8 @@
 	      preloaded_files.forEach((file, index) => {
 		  
 		  fileReaders[index] = new FileReader();
+
+		  //  .onload is called when the file is finished reading
 		  
 		  fileReaders[index].onload = (e) => {
 		      
@@ -189,12 +177,28 @@
 		      if (result) {
 			  
 			  open_files[index] = result;
+
+		      }
+
+		      const all_loaded = fileReaders.every( function (fileReader) {
+
+			  return fileReader.readyState === 2;
+
+		      });
+
+		      console.log(all_loaded);
+
+		      if (all_loaded === true) {
+
+			  console.log("open_files", open_files);
+			  
+			  store_loaded_files(open_files);
 			  
 		      }
-		      
-		      store_loaded_files(open_files);
 			  
 		  }
+
+		  //  .readAsText() initiates the file reading
 		  
 		  fileReaders[index].readAsText(file);
 		  
@@ -225,7 +229,7 @@
 
       useEffect(() => {
 
-	  console.log("loaded_files changed");
+	  console.log("loaded_files changed", loaded_files);
 
 	  process_data(loaded_files, store_processed_data)
 
