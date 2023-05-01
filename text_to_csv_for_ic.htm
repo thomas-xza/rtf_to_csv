@@ -89,21 +89,15 @@
 
   function convert_rtf_to_plain_text(rtf) {
       
-      console.log(rtf);
-  
-      rtf = rtf.replace(/\\par[d]?/g, "");
+      return rtf
+	  .replace(/\\par[d]?/g, "")
+	  .replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, "").trim();
 
-      console.log(rtf);
-  
-      // rtf = rtf.replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, "").trim();
-
-      console.log(rtf);
-
-      return rtf;
-      
   };
 
   function extract_data(obj_template, text_data) {
+
+      //  this is where the application-specific knowledge is
 
       return true;
 
@@ -111,40 +105,77 @@
 
   function process_data(loaded_files, store_processed_data) {
 
-      const cleaned_data_arr = new Array(loaded_files.length);
-
       console.log("process data #1", loaded_files);
 
-      console.log(["test"]);
-
-      // loaded_files.map( () => console.log("hello") );
-
-      // loaded_files.map( (data, index) => {
+      const cleaned_data_arr = loaded_files.map( (data, index) => 
 	
-      // 	  console.log("iter");
+	  convert_rtf_to_plain_text(data)
 
-      // 	  cleaned_data_arr[index] = data;
-      // 	  // convert_rtf_to_plain_text(data);
+      );
 
-      // });
+      console.log("process data #2", cleaned_data_arr);
 
-      // console.log("process data #2", cleaned_data_arr);
+      const data_as_objs = cleaned_data_arr.map( (data) => 
 
-      // const data_as_objs = new Array(loaded_files.length);
+	  extract_data(data)
 
-      // // cleaned_data_arr.map( (data, index) => {
+      );
 
-      // // 	  data_as_objs[index] = extract_data(obj_template, data);
+      console.log(data_as_objs);
 
-      // // })
-
-      // console.log(data_as_objs);
-
-      // return data_as_objs;
+      return data_as_objs;
 
   };
+
+  function files_load(preloaded_files, loaded_files, store_loaded_files){
+
+      const open_files = new Array(preloaded_files.length);
+
+      const fileReaders = new Array(preloaded_files.length);
+
+      if (preloaded_files.length) {
+	  
+	  preloaded_files.forEach((file, index) => {
+	      
+	      fileReaders[index] = new FileReader();
+
+	      //  .onload is called when a file is finished reading
+	      
+	      fileReaders[index].onload = (e) => {
+		  
+		  const { result } = e.target;
+		  
+		  if (result) {
+		      
+		      open_files[index] = result;
+
+		  }
+
+		  const all_loaded = fileReaders.every( function (fileReader) {
+
+		      return fileReader.readyState === 2;
+
+		  });
+
+		  if (all_loaded === true) {
+
+		      store_loaded_files(open_files);
+		      
+		  }
+		  
+	      }
+
+	      //  .readAsText() initiates a file reading
+	      
+	      fileReaders[index].readAsText(file);
+	      
+	  })
+	  
+      };
+
+  }
       
-  function File_upload( {preloaded_files, store_preloaded_files, loaded_files, store_loaded_files} ) {
+  function File_upload({ preloaded_files, store_preloaded_files }) {
 
       //  https://blog.logrocket.com/using-filereader-api-preview-images-react/
 
@@ -153,60 +184,6 @@
 	  store_preloaded_files(Array.from(event.target.files));
 
       };
-
-      useEffect(() => {
-
-	  console.log("preloaded_files", preloaded_files);
-
-	  const open_files = new Array(preloaded_files.length);
-
-	  const fileReaders = new Array(preloaded_files.length);
-
-	  if (preloaded_files.length) {
-	      
-	      preloaded_files.forEach((file, index) => {
-		  
-		  fileReaders[index] = new FileReader();
-
-		  //  .onload is called when the file is finished reading
-		  
-		  fileReaders[index].onload = (e) => {
-		      
-		      const { result } = e.target;
-		      
-		      if (result) {
-			  
-			  open_files[index] = result;
-
-		      }
-
-		      const all_loaded = fileReaders.every( function (fileReader) {
-
-			  return fileReader.readyState === 2;
-
-		      });
-
-		      console.log(all_loaded);
-
-		      if (all_loaded === true) {
-
-			  console.log("open_files", open_files);
-			  
-			  store_loaded_files(open_files);
-			  
-		      }
-			  
-		  }
-
-		  //  .readAsText() initiates the file reading
-		  
-		  fileReaders[index].readAsText(file);
-		  
-	      })
-	      
-	  };
-	  
-      }, [preloaded_files]);
 
       return(
 	      <div>
@@ -229,6 +206,12 @@
 
       useEffect(() => {
 
+	  files_load(preloaded_files, loaded_files, store_loaded_files);
+	  
+      }, [preloaded_files]);
+      
+      useEffect(() => {
+
 	  console.log("loaded_files changed", loaded_files);
 
 	  process_data(loaded_files, store_processed_data)
@@ -247,7 +230,7 @@
               <textarea className='short' name='csv_header' defaultValue={csv_header} onChange={event => set_csv_header(event.target.value)} ></textarea>
               <br/>
 
-	      <File_upload preloaded_files={preloaded_files} store_preloaded_files={store_preloaded_files} loaded_files={loaded_files} store_loaded_files={store_loaded_files} />
+	      <File_upload preloaded_files={preloaded_files} store_preloaded_files={store_preloaded_files} />
 
 	  </>
       )
