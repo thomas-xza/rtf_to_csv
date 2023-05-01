@@ -93,7 +93,7 @@
 
   };
 
-  function extract_data(obj_template, text_data) {
+  function extract_data_from_rtf(obj_template, text_data) {
 
       //  this is where the application-specific knowledge is
 
@@ -113,7 +113,7 @@
 
       const data_as_objs = cleaned_data_arr.map( (data) => 
 
-	  extract_data(data)
+	  extract_data_from_rtf(data)
 
       );
 
@@ -123,31 +123,29 @@
 
   function files_load(preloaded_files, store_loaded_files){
 
-      const open_files = new Array(preloaded_files.length);
-
-      const fileReaders = new Array(preloaded_files.length);
+      let open_files = [];
 
       if (preloaded_files.length) {
 	  
-	  preloaded_files.forEach((file, index) => {
-	      
-	      fileReaders[index] = new FileReader();
+	  const file_readers = preloaded_files.map((file, index) => {
 
+	      const f_reader = new FileReader();
+	      
 	      //  .onload is called when a file is finished reading
 	      
-	      fileReaders[index].onload = (e) => {
+	      f_reader.onload = (e) => {
 		  
 		  const { result } = e.target;
 		  
 		  if (result) {
 		      
-		      open_files[index] = result;
+		      open_files = [ ...open_files, result ];
 
 		  }
 
-		  const all_loaded = fileReaders.every( function (fileReader) {
+		  const all_loaded = file_readers.every( function (f_r) {
 
-		      return fileReader.readyState === 2;
+		      return f_r.readyState === 2;
 
 		  });
 
@@ -161,9 +159,13 @@
 
 	      //  .readAsText() initiates a file reading
 	      
-	      fileReaders[index].readAsText(file);
+	      f_reader.readAsText(file);
+
+	      return f_reader;
 	      
 	  })
+
+	  console.log(file_readers);
 	  
       };
 
