@@ -56,15 +56,13 @@
 
   };
 
-  function format_objs(input_csv, data_as_objs) {
+  function format_objs(csv_header, data_as_objs) {
 
-      const csv_header_arr = input_csv.split(",");
+      const csv_header_arr = csv_header.split(",");
       
-      console.log(data_as_objs);
-
       const final_output = new Array(data_as_objs.length + 1);
 
-      final_output[0] = input_csv;
+      final_output[0] = csv_header;
 
       data_as_objs.map( (obj, index_a) => {
 
@@ -105,7 +103,7 @@
 
   function process_data(loaded_files, store_processed_data) {
 
-      console.log("process data #1", loaded_files);
+      // console.log("process data #1", loaded_files);
 
       const cleaned_data_arr = loaded_files.map( (data, index) => 
 	
@@ -113,15 +111,11 @@
 
       );
 
-      console.log("process data #2", cleaned_data_arr);
-
       const data_as_objs = cleaned_data_arr.map( (data) => 
 
 	  extract_data(data)
 
       );
-
-      console.log(data_as_objs);
 
       return data_as_objs;
 
@@ -174,7 +168,27 @@
       };
 
   }
+
+  function download_data(formatted_data) {
+
+      // console.log(output_data);
+
+      const file = new Blob([ formatted_data ], { type: 'text/csv' });
+
+      const element = document.createElement("a");
+
+      element.href = URL.createObjectURL(file);
+
+      const date = new Date();
+
+      element.download = 'qm_data_' + date.getFullYear() + '_' + date.getMonth() + '_' + date.getDate() + '.csv';
+
+      document.body.appendChild(element);
+
+      element.click();
       
+  }
+  
   function File_upload({ preloaded_files, store_preloaded_files }) {
 
       //  https://blog.logrocket.com/using-filereader-api-preview-images-react/
@@ -204,6 +218,8 @@
 
       const [processed_data, store_processed_data] = useState([]);
 
+      const [formatted_data, store_formatted_data] = useState([]);
+
       useEffect(() => {
 
 	  files_load(preloaded_files, loaded_files, store_loaded_files);
@@ -214,7 +230,7 @@
 
 	  console.log("loaded_files changed", loaded_files);
 
-	  process_data(loaded_files, store_processed_data)
+	  process_data(loaded_files, store_processed_data);
 
       }, [loaded_files]);
 
@@ -222,17 +238,24 @@
 
       // 	  console.log("useEffect #2", processed_data);
 
+	  // download_data(processed_data, csv_header);
+
       // }, [processed_data]);
 
       return (
 	  <>
-	  
+
+	  CSV header: <br/>
               <textarea className='short' name='csv_header' defaultValue={csv_header} onChange={event => set_csv_header(event.target.value)} ></textarea>
               <br/>
 
 	      <File_upload preloaded_files={preloaded_files} store_preloaded_files={store_preloaded_files} />
+	      <br/>
 
-	  </>
+	  Data processed to CSV (automatically downloaded): <br/>
+              <textarea className='long' name='csv_output' value={formatted_data} readOnly ></textarea>
+
+	      </>
       )
 
   };
