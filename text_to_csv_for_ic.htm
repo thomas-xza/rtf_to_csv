@@ -33,7 +33,9 @@
 
     <br><br>
 
-    <strong>Privacy notice:</strong> all data processing is done solely on the computer running this <em>intentionally offline</em> website, via client-side Javascript engines available as part of any modern web browser.
+    <strong>Privacy notice:</strong> all data processing is done solely on the computer running this <em>intentionally offline</em> website, via client-side Javascript engines available within any modern web browser.
+    <br>No data is ever stored within the browser after exit (e.g. using localStorage), or transmitted over any network connection.
+    <br>The offline nature can be verified by pressing F12, choosing "Network", and adjusting headers to show "URL", or by simply disconnecting the computer from internet/network.
     <br><br>
 
     <em>Javascript by Thomas. Framework by React.js v18.2.</em>
@@ -50,15 +52,16 @@
       const obj_template = {};
 
       csv_header.split(',').map(
-	  (field_name) => obj_template[field_name] = ""      )
+	  
+	  (field_name) => obj_template[field_name] = '' )
 
       return obj_template;
 
   };
 
-  function format_objs(csv_header, data_as_objs) {
+  function format_data(data_as_objs, csv_header) {
 
-      const csv_header_arr = csv_header.split(",");
+      const csv_header_arr = csv_header.split(',');
       
       const final_output = new Array(data_as_objs.length + 1);
 
@@ -75,53 +78,108 @@
 	  })
 
 
-	  final_output[index_a + 1] = new_row.join(",");
+	  final_output[index_a + 1] = new_row.join(',');
 
       });
 
       console.log(final_output);
       
-      return final_output.join("\n");
+      return final_output.join('\n');
 
   };
 
   function convert_rtf_to_plain_text(rtf) {
       
       return rtf
-	  .replace(/\\par[d]?/g, "")
-	  .replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, "").trim();
+	  .replace(/\\par[d]?/g, '')
+	  .replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, '').trim();
 
   };
 
-  function extract_data_from_rtf(obj_template, text_data) {
+  function extract_data_from_rtf(new_obj, text_data) {
 
       //  this is where the application-specific knowledge is
 
-      return true;
+      console.log('text-data', typeof text_data, text_data);
+
+      const names = text_data.match(/Name:.*Sex:/)[0]
+	    .replace('Name:','')
+	    .replace('Sex:', '')
+	    .split(',');
+
+      new_obj['NAME'] = names[1].trim();
+      
+      new_obj['SURNAME'] = names[0].trim();
+
+      new_obj['DOB'] = text_data.match(/DOB.*Age/)[0].match(/[0-9]{4}/)[0].trim();
+
+      const phones = text_data.match(/Telephone.*Hospital/)[0]
+	    .replace('Telephone:','')
+	    .replace('Hospital:','').trim();
+
+      new_obj['MOB'] = phones.match(/Mobile = [0-9]*/)[0]
+	  .replace('Mobile = ','').trim();
+      
+      new_obj['TEL'] = phones.match(/Home = [0-9]*/)[0]
+	  .replace('Home = ', '').trim();
+
+      const address = text_data.match(/Address.*Patient Telephone/)[0]
+	    .replace('Address:','')
+	    .replace('Patient Telephone','')
+	    .split(',');
+
+      new_obj['ADDRESS'] = address[0].trim();
+      
+      new_obj['POST CODE'] = address.slice(-1)[0].trim();
+
+      new_obj["REFERRER NAME"] = text_data
+	  .match(/Requesting Doctor.*Consultant/)[0]
+	  .replace('Requesting Doctor:', '')
+	  .replace('Consultant', '')
+	  .replace(',','').trim();
+
+      new_obj["REFERRING DEPT/ORG"] = text_data
+	  .match(/Referring Speciality.*Other/)[0]
+	  .replace('Referring Speciality','')
+	  .replace('Other','')
+	  .replace(',','').trim();
+      
+      new_obj["PRACTICE"] = text_data
+	  .match(/Practice.*_/)[0]
+	  .replace('Practice:','')
+	  .replace(/,.*/,'').trim();
+      
+      return new_obj;
 
   };
 
-  function process_data(loaded_files, store_processed_data) {
+  function process_data(loaded_files, csv_header) {
 
-      console.log("process data #1", loaded_files);
-
+      // console.log('process data #1', loaded_files);
+      
       const cleaned_data_arr = loaded_files.map( (data, index) => 
 	
 	  convert_rtf_to_plain_text(data)
 
       );
 
-      const data_as_objs = cleaned_data_arr.map( (data) => 
+      console.log(cleaned_data_arr);
 
-	  extract_data_from_rtf(data)
+      const obj_template = csv_to_obj(csv_header);
+
+      const data_as_objs_arr = cleaned_data_arr.map( (data) => 
+
+	  extract_data_from_rtf(obj_template, data)
 
       );
 
-      return data_as_objs;
+      console.log(data_as_objs_arr);
+
+      return data_as_objs_arr;
 
   };
 
-  function files_load(preloaded_files, store_loaded_files){
+  function files_load(preloaded_files, set_loaded_files){
 
       let open_files = [];
 
@@ -131,7 +189,7 @@
 
 	      const f_reader = new FileReader();
 	      
-	      //  .onload is called when a file is finished reading
+	      //  .onload stores a function to be called when file read done
 	      
 	      f_reader.onload = (e) => {
 		  
@@ -143,15 +201,15 @@
 
 		  }
 
-		  const all_loaded = file_readers.every( function (f_r) {
+		  const all_files_read = file_readers.every( function (f_r) {
 
 		      return f_r.readyState === 2;
 
 		  });
 
-		  if (all_loaded === true) {
+		  if (all_files_read === true) {
 
-		      store_loaded_files(open_files);
+		      set_loaded_files(open_files);
 		      
 		  }
 		  
@@ -165,39 +223,41 @@
 	      
 	  })
 
-	  console.log(file_readers);
-	  
       };
 
   }
 
   function download_data(formatted_data) {
 
-      // console.log(output_data);
+      console.log(formatted_data);
 
-      const file = new Blob([ formatted_data ], { type: 'text/csv' });
+      if (formatted_data.split('\n').length > 1) {
 
-      const element = document.createElement("a");
+	  const file = new Blob([ formatted_data ], { type: 'text/csv' });
 
-      element.href = URL.createObjectURL(file);
+	  const element = document.createElement("a");
 
-      const date = new Date();
+	  element.href = URL.createObjectURL(file);
 
-      element.download = 'qm_data_' + date.getFullYear() + '_' + date.getMonth() + '_' + date.getDate() + '.csv';
+	  const date = new Date();
 
-      document.body.appendChild(element);
+	  element.download = 'ic_data_' + date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + '_' + date.getHours() + date.getMinutes() + '.csv';
 
-      element.click();
+	  document.body.appendChild(element);
+
+	  element.click();
+
+      }
       
   }
   
-  function File_upload({ preloaded_files, store_preloaded_files, store_loaded_files }) {
+  function File_upload({ preloaded_files, store_preloaded_files, set_loaded_files }) {
 
       //  https://blog.logrocket.com/using-filereader-api-preview-images-react/
 
       function handle_change(event) {
 	  
-	  files_load(Array.from(event.target.files), store_loaded_files);
+	  files_load(Array.from(event.target.files), set_loaded_files);
 	  
       };
 
@@ -212,21 +272,27 @@
   const App = function Main() {
 
       const [csv_header, set_csv_header] = useState(
-          'forename,surname,dob,phone_a,phone_b,address,postcode,source');
+          'DATE,NAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,PRACTICE');
 
-      const [loaded_files, store_loaded_files] = useState([]);
+      const [loaded_files, set_loaded_files] = useState([]);
 
-      const [processed_data, store_processed_data] = useState([]);
-
-      const [formatted_data, store_formatted_data] = useState([]);
-
+      const [formatted_data, set_formatted_data] = useState("");
+      
       useEffect(() => {
 
 	  console.log("loaded_files changed", loaded_files);
 
-	  process_data(loaded_files, store_processed_data);
+	  const data_as_objs_arr = process_data(loaded_files, csv_header);
+
+	  set_formatted_data(format_data(data_as_objs_arr, csv_header));
 
       }, [loaded_files]);
+
+      useEffect(() => {
+
+	  download_data(formatted_data);
+
+      }, [formatted_data]);
 
       // useEffect(() => {
 
@@ -243,7 +309,7 @@
               <textarea className='short' name='csv_header' defaultValue={csv_header} onChange={event => set_csv_header(event.target.value)} ></textarea>
               <br/>
 
-	      <File_upload store_loaded_files={store_loaded_files} />
+	      <File_upload set_loaded_files={set_loaded_files} />
 	      <br/>
 
 	  Data processed to CSV (automatically downloaded): <br/>
