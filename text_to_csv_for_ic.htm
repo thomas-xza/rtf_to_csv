@@ -26,7 +26,7 @@
     1. Input the CSV template that the data is to be fit into, or leave it as the default as of 2023 (note: if you make changes, the header names must match the default).   
     <br><br>
 
-    2. Select the <code>*.rtf</code> file(s) via "Browse..." that are to be fit into it.
+    2. Select the <code>*.rtf</code> file(s) via "Browse..." that are to be fit into it (can be multiple files) and confirm selection.
     <br><br>
 
     3. The CSV will be automatically downloaded.
@@ -56,6 +56,18 @@
 	      (field_name) => obj_template[field_name] = '' )
 
 	  return obj_template;
+
+      };
+
+      function objs_arr_to_json(objs_arr=[{}], set_data_json) {
+
+	  const pretty_objs = objs_arr.map( (obj) =>
+
+	      JSON.stringify(obj, null, 4)
+
+	  );
+
+	  set_data_json(pretty_objs.join("\n"));
 
       };
 
@@ -98,9 +110,11 @@
 
       function add_data_to_objs(objs_arr) {
 
+	  console.log("add_data_to_objs", objs_arr);
+
 	  const date = new Date();
 
-	  return objs_arr.map( function (obj) {
+	  const new_objs = objs_arr.map( (obj) => {
 
 	      obj["DATE"] = date.toLocaleDateString('en-GB', {
 		  year: 'numeric',
@@ -112,12 +126,16 @@
 
 	      obj["REFERRAL SOURCE"] = "UHL";
 
+	      return obj;
+
 	  })
 
-      }
+	  return new_objs;
+
+      };
 
       function extract_data_from_rtf(new_obj, text_data) {
-
+	  
 	  //  this is where the application-specific knowledge is
 
 	  // console.log('text-data', typeof text_data, text_data);
@@ -175,7 +193,8 @@
 
       function process_data(loaded_files, csv_header) {
 
-	  // console.log('process data #1', loaded_files);
+      // console.log('process data #1', loaded_files);
+      
 	  
 	  const cleaned_data_arr = loaded_files.map( (data, index) => 
 	      
@@ -195,7 +214,13 @@
 
 	  console.log(data_as_objs_arr);
 
-	  return data_as_objs_arr;
+	  // return data_as_objs_arr;
+
+	  const final_objs_arr = add_data_to_objs(data_as_objs_arr);
+
+	  console.log(final_objs_arr);
+
+	  return final_objs_arr;
 
       };
 
@@ -305,6 +330,8 @@
 
 	  const [loaded_files, set_loaded_files] = useState([]);
 
+	  const [json_data, set_json_data] = useState({});
+	  
 	  const [formatted_data, set_formatted_data] = useState("");
 	  
 	  useEffect(() => {
@@ -313,39 +340,34 @@
 
 	      const data_as_objs_arr = process_data(loaded_files, csv_header);
 
-	      const data_as_objs_arr_extra = add_data_to_objs(data_as_objs_arr);
-
+	      objs_arr_to_json(data_as_objs_arr, set_json_data);
+	      
 	      set_formatted_data(format_data(data_as_objs_arr, csv_header));
 
 	  }, [loaded_files, csv_header]);
 
 	  useEffect(() => {
-
+	
 	      download_data(formatted_data);
 
 	  }, [formatted_data]);
 
-	  // useEffect(() => {
-
-	  // 	  console.log("useEffect #2", processed_data);
-
-	  // download_data(processed_data, csv_header);
-
-	  // }, [processed_data]);
-
 	  return (
 		  <>
 
-	      CSV header: <br/>
+	      <strong>CSV header:</strong> <br/>
 		  <textarea className='short' name='csv_header' defaultValue={csv_header} onChange={event => set_csv_header(event.target.value)} ></textarea>
 		  <br/>
 
 		  <File_upload set_loaded_files={set_loaded_files} />
 		  <br/>
 
-	      Data processed to CSV (automatically downloaded): <br/>
+	      <strong>Data processed to CSV (automatically downloaded):</strong> <br/>
 		  <textarea className='long' name='csv_output' value={formatted_data} readOnly ></textarea>
+		  <br/>
 
+	      <strong>Raw JSON data structures:</strong> <br/>
+		  <textarea className='long' name='json_data' value={json_data} readOnly ></textarea>
 	      </>
 	  )
 
