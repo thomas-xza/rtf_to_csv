@@ -337,8 +337,4 @@ const App = function Main() {
 
 };
 
-const domNode = document.getElementById('root');
-const root = createRoot(domNode);
-root.render(
-	<App />
-);
+createRoot(document.getElementById('root')).render(<h1>Your App</h1>)
