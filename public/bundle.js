@@ -7941,9 +7941,6 @@
     };
   }
 
-  const domNode = document.getElementById('root');
-  const root = createRoot(domNode);
-  root.render( /*#__PURE__*/reactExports.React.createElement(App, null));
   function csv_to_obj(csv_header) {
     const obj_template = {};
     csv_header.split(',').map(field_name => obj_template[field_name] = '');
@@ -8119,5 +8116,8 @@
       readOnly: true
     }));
   };
+  const domNode = document.getElementById('root');
+  const root = createRoot(domNode);
+  root.render( /*#__PURE__*/reactExports.React.createElement(App, null));
 
 })();
