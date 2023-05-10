@@ -8265,11 +8265,11 @@
 
   // };
 
-  const App = function Main() {
+  var App = function Main() {
     return /*#__PURE__*/reactExports.React.createElement("h1", null, "Hello");
   };
-  const domNode = document.getElementById('root');
-  const root = createRoot(domNode);
+  var domNode = document.getElementById('root');
+  var root = createRoot(domNode);
   root.render( /*#__PURE__*/reactExports.React.createElement(App, null));
 
 })();
