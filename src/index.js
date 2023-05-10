@@ -1,5 +1,12 @@
 import { React, useState, useEffect } from 'react';
 import { ReactDOM } from 'react-dom/client';
+
+import App from './App';
+
+ReactDOM.createRoot(document.querySelector('#root')).render(
+   <App/>
+);
+
 // import { createRoot } from 'react-dom/client';
 
 
@@ -337,15 +344,3 @@ import { ReactDOM } from 'react-dom/client';
 //     )
 
 // };
-
-function App() {
-   return (
-      <h1>Rollup is amazing!</h1>
-   );
-}
-
-ReactDOM.createRoot(document.querySelector('#root')).render(
-   <App/>
-);
-
-// createRoot(document.getElementById('root')).render(<h1>Your App</h1>)
