@@ -1,4 +1,5 @@
-import { React, useState, useEffect } from 'react';
+import React from 'react';
+import { useState, useEffect } from 'react';
 
 export function objs_arr_to_json(objs_arr=[{}], set_data_json) {
 
