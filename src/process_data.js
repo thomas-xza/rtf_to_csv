@@ -52,7 +52,7 @@ function convert_rtf_to_plain_text(rtf) {
 
     console.log(rtf);
 
-    const clean_rtf
+    const clean_rtf = rtf
 	.replace(/\\par[d]?/g, '')
 	.replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, '').trim();
     
@@ -63,6 +63,8 @@ function convert_rtf_to_plain_text(rtf) {
 };
 
 function add_data_to_objs(objs_arr) {
+
+    //  This function adds generic kinds of data to all records input
 
     console.log("add_data_to_objs", objs_arr);
 

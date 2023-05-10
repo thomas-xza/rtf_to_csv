@@ -7973,6 +7973,41 @@
 	    return _arr;
 	  }
 	}
+	function ownKeys(object, enumerableOnly) {
+	  var keys = Object.keys(object);
+	  if (Object.getOwnPropertySymbols) {
+	    var symbols = Object.getOwnPropertySymbols(object);
+	    enumerableOnly && (symbols = symbols.filter(function (sym) {
+	      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+	    })), keys.push.apply(keys, symbols);
+	  }
+	  return keys;
+	}
+	function _objectSpread2(target) {
+	  for (var i = 1; i < arguments.length; i++) {
+	    var source = null != arguments[i] ? arguments[i] : {};
+	    i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
+	      _defineProperty(target, key, source[key]);
+	    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
+	      Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+	    });
+	  }
+	  return target;
+	}
+	function _defineProperty(obj, key, value) {
+	  key = _toPropertyKey(key);
+	  if (key in obj) {
+	    Object.defineProperty(obj, key, {
+	      value: value,
+	      enumerable: true,
+	      configurable: true,
+	      writable: true
+	    });
+	  } else {
+	    obj[key] = value;
+	  }
+	  return obj;
+	}
 	function _slicedToArray(arr, i) {
 	  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
 	}
@@ -8006,6 +8041,20 @@
 	}
 	function _nonIterableRest() {
 	  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+	}
+	function _toPrimitive(input, hint) {
+	  if (typeof input !== "object" || input === null) return input;
+	  var prim = input[Symbol.toPrimitive];
+	  if (prim !== undefined) {
+	    var res = prim.call(input, hint || "default");
+	    if (typeof res !== "object") return res;
+	    throw new TypeError("@@toPrimitive must return a primitive value.");
+	  }
+	  return (hint === "string" ? String : Number)(input);
+	}
+	function _toPropertyKey(arg) {
+	  var key = _toPrimitive(arg, "string");
+	  return typeof key === "symbol" ? key : String(key);
 	}
 
 	function File_upload(_ref) {
@@ -8075,6 +8124,110 @@
 	  }
 	}
 
+	function extract_data_from_rtf(obj, data) {
+	  //  this is where the application-specific knowledge is
+
+	  // console.log('text data', typeof text_data, data);
+
+	  return _objectSpread2(_objectSpread2({}, obj), {}, {
+	    'NAME': extract_forename(data),
+	    'SURNAME': extract_surname(data),
+	    'DOB': extract_dob(data),
+	    'MOB': extract_mobile(data),
+	    'TEL': extract_hometel(data),
+	    'ADDRESS': extract_addr_line(data),
+	    'POST CODE': extract_postcode(data),
+	    'REFERRER NAME': extract_refer_name(data),
+	    'REFERRING DEPT/ORG': extract_refer_dept(data),
+	    'PRACTICE': extract_gp(data)
+	  });
+	}
+	function extract_names(data) {
+	  return data.match(/Name:.*Sex:/)[0].replace('Name:', '').replace('Sex:', '').split(',');
+	}
+	function extract_forename(data) {
+	  try {
+	    var names = extract_names(data);
+	    return names[1].trim();
+	  } catch (_unused) {
+	    return "";
+	  }
+	}
+	function extract_surname(data) {
+	  try {
+	    var names = extract_names(data);
+	    return names[0].trim();
+	  } catch (_unused2) {
+	    return "";
+	  }
+	}
+	function extract_dob(data) {
+	  try {
+	    return data.match(/DOB.*Age/)[0].match(/[0-9]{4}/)[0].trim();
+	  } catch (_unused3) {
+	    return "";
+	  }
+	}
+	function extract_phones(data) {
+	  return data.match(/Telephone.*Hospital/)[0].replace('Telephone:', '').replace('Hospital:', '').trim();
+	}
+	function extract_mobile(data) {
+	  try {
+	    var phones = extract_phones(data);
+	    return phones.match(/Mobile = [0-9]*/)[0].replace('Mobile = ', '').trim();
+	  } catch (_unused4) {
+	    return "";
+	  }
+	}
+	function extract_hometel(data) {
+	  try {
+	    var phones = extract_phones(data);
+	    return phones.match(/Home = [0-9]*/)[0].replace('Home = ', '').trim();
+	  } catch (_unused5) {
+	    return "";
+	  }
+	}
+	function extract_addr(data) {
+	  return data.match(/Address.*Patient Telephone/)[0].replace('Address:', '').replace('Patient Telephone', '').split(',');
+	}
+	function extract_addr_line(data) {
+	  try {
+	    var addr = extract_addr(data);
+	    return addr[0].trim();
+	  } catch (_unused6) {
+	    return "";
+	  }
+	}
+	function extract_postcode(data) {
+	  try {
+	    var addr = extract_addr(data);
+	    return addr.slice(-1)[0].trim();
+	  } catch (_unused7) {
+	    return "";
+	  }
+	}
+	function extract_refer_dept(data) {
+	  try {
+	    return data.match(/Referring Speciality.*Other/)[0].replace('Referring Speciality', '').replace('Other', '').replace(',', '').trim();
+	  } catch (_unused8) {
+	    return "";
+	  }
+	}
+	function extract_refer_name(data) {
+	  try {
+	    return data.match(/Requesting Doctor.*Consultant in charge/)[0].replace('Requesting Doctor:', '').replace('Consultant in charge', '').replace(', ', '').trim();
+	  } catch (_unused9) {
+	    return "";
+	  }
+	}
+	function extract_gp(data) {
+	  try {
+	    return data.match(/Practice.*_/)[0].replace('Practice:', '').replace(/,.*/, '').trim();
+	  } catch (_unused10) {
+	    return "";
+	  }
+	}
+
 	function process_data(loaded_files, csv_header) {
 	  // console.log('process data #1', loaded_files);
 
@@ -8102,42 +8255,28 @@
 	  return obj_template;
 	}
 	function convert_rtf_to_plain_text(rtf) {
-	  return rtf.replace(/\\par[d]?/g, '').replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, '').trim();
+	  console.log(rtf);
+	  var clean_rtf = rtf.replace(/\\par[d]?/g, '').replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, '').trim();
+	  console.log(clean_rtf);
+	  return clean_rtf;
 	}
 	function add_data_to_objs(objs_arr) {
+	  //  This function adds generic kinds of data to all records input
+
 	  console.log("add_data_to_objs", objs_arr);
 	  var date = new Date();
 	  var new_objs = objs_arr.map(function (obj) {
-	    obj["DATE"] = date.toLocaleDateString('en-GB', {
-	      year: 'numeric',
-	      month: '2-digit',
-	      day: '2-digit'
+	    return _objectSpread2(_objectSpread2({}, obj), {}, {
+	      'DATE': date.toLocaleDateString('en-GB', {
+	        year: 'numeric',
+	        month: '2-digit',
+	        day: '2-digit'
+	      }),
+	      'REFERRAL TYPE': 'Email',
+	      'REFERRAL SOURCE': 'Lewisham Hospital'
 	    });
-	    obj["REFERRAL TYPE"] = "Email";
-	    obj["REFERRAL SOURCE"] = "UHL";
-	    return obj;
 	  });
 	  return new_objs;
-	}
-	function extract_data_from_rtf(new_obj, text_data) {
-	  //  this is where the application-specific knowledge is
-
-	  // console.log('text-data', typeof text_data, text_data);
-
-	  var names = text_data.match(/Name:.*Sex:/)[0].replace('Name:', '').replace('Sex:', '').split(',');
-	  new_obj['NAME'] = names[1].trim();
-	  new_obj['SURNAME'] = names[0].trim();
-	  new_obj['DOB'] = text_data.match(/DOB.*Age/)[0].match(/[0-9]{4}/)[0].trim();
-	  var phones = text_data.match(/Telephone.*Hospital/)[0].replace('Telephone:', '').replace('Hospital:', '').trim();
-	  new_obj['MOB'] = phones.match(/Mobile = [0-9]*/)[0].replace('Mobile = ', '').trim();
-	  new_obj['TEL'] = phones.match(/Home = [0-9]*/)[0].replace('Home = ', '').trim();
-	  var address = text_data.match(/Address.*Patient Telephone/)[0].replace('Address:', '').replace('Patient Telephone', '').split(',');
-	  new_obj['ADDRESS'] = address[0].trim();
-	  new_obj['POST CODE'] = address.slice(-1)[0].trim();
-	  new_obj["REFERRER NAME"] = text_data.match(/Requesting Doctor.*Consultant/)[0].replace('Requesting Doctor:', '').replace('Consultant', '').replace(', ', '').trim();
-	  new_obj["REFERRING DEPT/ORG"] = text_data.match(/Referring Speciality.*Other/)[0].replace('Referring Speciality', '').replace('Other', '').replace(',', '').trim();
-	  new_obj["PRACTICE"] = text_data.match(/Practice.*_/)[0].replace('Practice:', '').replace(/,.*/, '').trim();
-	  return new_obj;
 	}
 
 	function objs_arr_to_json() {
