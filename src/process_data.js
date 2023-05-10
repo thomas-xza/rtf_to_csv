@@ -2,17 +2,6 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { extract_data_from_rtf } from './extract_data';
 
-export function objs_arr_to_json(objs_arr=[{}], set_data_json) {
-
-    const pretty_objs = objs_arr.map( (obj) =>
-
-				      JSON.stringify(obj, null, 4)
-
-				    );
-
-    set_data_json(pretty_objs.join("\n"));
-
-};
 
 export function process_data(loaded_files, csv_header) {
 
@@ -59,35 +48,6 @@ function csv_to_obj(csv_header) {
 
 };
 
-export function format_data(data_as_objs, csv_header) {
-
-    const csv_header_arr = csv_header.split(',');
-    
-    const final_output = new Array(data_as_objs.length + 1);
-
-    final_output[0] = csv_header;
-
-    data_as_objs.map( (obj, index_a) => {
-
-	const new_row = new Array(csv_header_arr.length);
-	
-	csv_header_arr.map( (header, index_b) => {
-
-	    new_row[index_b] = obj[header];
-
-	})
-
-
-	final_output[index_a + 1] = new_row.join(',');
-
-    });
-
-    console.log(final_output);
-    
-    return final_output.join('\n');
-
-};
-
 function convert_rtf_to_plain_text(rtf) {
 
     console.log(rtf);
@@ -110,17 +70,19 @@ function add_data_to_objs(objs_arr) {
 
     const new_objs = objs_arr.map( (obj) => {
 
-	obj["DATE"] = date.toLocaleDateString('en-GB', {
-	    year: 'numeric',
-	    month: '2-digit',
-	    day: '2-digit',
-	});
+	return { ...obj,
+		 
+		 'DATE': date.toLocaleDateString('en-GB', {
+		     year: 'numeric',
+		     month: '2-digit',
+		     day: '2-digit',
+		 }),
 
-	obj["REFERRAL TYPE"] = "Email";
+		 'REFERRAL TYPE': 'Email',
 
-	obj["REFERRAL SOURCE"] = "UHL";
-
-	return obj;
+		 'REFERRAL SOURCE': 'Lewisham Hospital'
+		 
+	       };
 
     })
 
