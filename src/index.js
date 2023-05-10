@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client';
 
 const domNode = document.getElementById('root');
 const root = createRoot(domNode);
+root.render(
+	<App />
+);
+
 
 
 function csv_to_obj(csv_header) {
@@ -330,10 +334,4 @@ const App = function Main() {
     )
 
 };
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-
-root.render(
-	<App />
-);
 
