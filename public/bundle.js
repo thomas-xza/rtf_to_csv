@@ -8008,40 +8008,98 @@
 	  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 	}
 
-	// function App() {
-	//    return (
-	//       <h1>Rollup is amazing!</h1>
-	//    );
-	// }
+	function File_upload(_ref) {
+	  _ref.preloaded_files;
+	    _ref.store_preloaded_files;
+	    var set_loaded_files = _ref.set_loaded_files;
+	  //  https://blog.logrocket.com/using-filereader-api-preview-images-react/
 
+	  function handle_change(event) {
+	    files_load(Array.from(event.target.files), set_loaded_files);
+	  }
+	  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+	    type: "file",
+	    accept: ".rtf",
+	    onChange: function onChange(event) {
+	      return handle_change(event);
+	    },
+	    multiple: true
+	  }));
+	}
+	function files_load(preloaded_files, set_loaded_files) {
+	  var open_files = [];
+	  if (preloaded_files.length) {
+	    var file_readers = preloaded_files.map(function (file, index) {
+	      var f_reader = new FileReader();
+
+	      //  .onload stores a function to be called when file read done
+
+	      f_reader.onload = function (e) {
+	        var result = e.target.result;
+	        if (result) {
+	          open_files = [].concat(_toConsumableArray(open_files), [result]);
+	        }
+	        var all_files_read = file_readers.every(function (f_r) {
+	          return f_r.readyState === 2;
+	        });
+	        if (all_files_read === true) {
+	          set_loaded_files(open_files);
+	        }
+	      };
+
+	      //  .readAsText() initiates a file reading
+
+	      f_reader.readAsText(file);
+	      return f_reader;
+	    });
+	  }
+	}
+
+	function download_data(formatted_data) {
+	  console.log(formatted_data);
+	  if (formatted_data.split('\n').length > 1) {
+	    var file = new Blob([formatted_data], {
+	      type: 'text/csv'
+	    });
+	    var element = document.createElement("a");
+	    element.href = URL.createObjectURL(file);
+	    var date = new Date();
+	    var date_str = date.toLocaleDateString('ja-JP', {
+	      year: 'numeric',
+	      month: '2-digit',
+	      day: '2-digit'
+	    });
+	    element.download = 'ic_data_' + date_str.replace('/', '_') + '_' + String(date.getHours()).padStart(2, '0') + String(date.getMinutes()).padStart(2, '0') + '.csv';
+	    document.body.appendChild(element);
+	    element.click();
+	  }
+	}
+
+	function process_data(loaded_files, csv_header) {
+	  // console.log('process data #1', loaded_files);
+
+	  var cleaned_data_arr = loaded_files.map(function (data, index) {
+	    return convert_rtf_to_plain_text(data);
+	  });
+	  console.log(cleaned_data_arr);
+	  var obj_template = csv_to_obj(csv_header);
+	  var data_as_objs_arr = cleaned_data_arr.map(function (data) {
+	    return extract_data_from_rtf(obj_template, data);
+	  });
+	  console.log(data_as_objs_arr);
+
+	  // return data_as_objs_arr;
+
+	  var final_objs_arr = add_data_to_objs(data_as_objs_arr);
+	  console.log(final_objs_arr);
+	  return final_objs_arr;
+	}
 	function csv_to_obj(csv_header) {
 	  var obj_template = {};
 	  csv_header.split(',').map(function (field_name) {
 	    return obj_template[field_name] = '';
 	  });
 	  return obj_template;
-	}
-	function objs_arr_to_json() {
-	  var objs_arr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [{}];
-	  var set_data_json = arguments.length > 1 ? arguments[1] : undefined;
-	  var pretty_objs = objs_arr.map(function (obj) {
-	    return JSON.stringify(obj, null, 4);
-	  });
-	  set_data_json(pretty_objs.join("\n"));
-	}
-	function format_data(data_as_objs, csv_header) {
-	  var csv_header_arr = csv_header.split(',');
-	  var final_output = new Array(data_as_objs.length + 1);
-	  final_output[0] = csv_header;
-	  data_as_objs.map(function (obj, index_a) {
-	    var new_row = new Array(csv_header_arr.length);
-	    csv_header_arr.map(function (header, index_b) {
-	      new_row[index_b] = obj[header];
-	    });
-	    final_output[index_a + 1] = new_row.join(',');
-	  });
-	  console.log(final_output);
-	  return final_output.join('\n');
 	}
 	function convert_rtf_to_plain_text(rtf) {
 	  return rtf.replace(/\\par[d]?/g, '').replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, '').trim();
@@ -8081,90 +8139,30 @@
 	  new_obj["PRACTICE"] = text_data.match(/Practice.*_/)[0].replace('Practice:', '').replace(/,.*/, '').trim();
 	  return new_obj;
 	}
-	function process_data(loaded_files, csv_header) {
-	  // console.log('process data #1', loaded_files);
 
-	  var cleaned_data_arr = loaded_files.map(function (data, index) {
-	    return convert_rtf_to_plain_text(data);
+	function objs_arr_to_json() {
+	  var objs_arr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [{}];
+	  var set_data_json = arguments.length > 1 ? arguments[1] : undefined;
+	  var pretty_objs = objs_arr.map(function (obj) {
+	    return JSON.stringify(obj, null, 4);
 	  });
-	  console.log(cleaned_data_arr);
-	  var obj_template = csv_to_obj(csv_header);
-	  var data_as_objs_arr = cleaned_data_arr.map(function (data) {
-	    return extract_data_from_rtf(obj_template, data);
+	  set_data_json(pretty_objs.join("\n"));
+	}
+	function format_data(data_as_objs, csv_header) {
+	  var csv_header_arr = csv_header.split(',');
+	  var final_output = new Array(data_as_objs.length + 1);
+	  final_output[0] = csv_header;
+	  data_as_objs.map(function (obj, index_a) {
+	    var new_row = new Array(csv_header_arr.length);
+	    csv_header_arr.map(function (header, index_b) {
+	      new_row[index_b] = obj[header];
+	    });
+	    final_output[index_a + 1] = new_row.join(',');
 	  });
-	  console.log(data_as_objs_arr);
-
-	  // return data_as_objs_arr;
-
-	  var final_objs_arr = add_data_to_objs(data_as_objs_arr);
-	  console.log(final_objs_arr);
-	  return final_objs_arr;
+	  console.log(final_output);
+	  return final_output.join('\n');
 	}
-	function files_load(preloaded_files, set_loaded_files) {
-	  var open_files = [];
-	  if (preloaded_files.length) {
-	    var file_readers = preloaded_files.map(function (file, index) {
-	      var f_reader = new FileReader();
 
-	      //  .onload stores a function to be called when file read done
-
-	      f_reader.onload = function (e) {
-	        var result = e.target.result;
-	        if (result) {
-	          open_files = [].concat(_toConsumableArray(open_files), [result]);
-	        }
-	        var all_files_read = file_readers.every(function (f_r) {
-	          return f_r.readyState === 2;
-	        });
-	        if (all_files_read === true) {
-	          set_loaded_files(open_files);
-	        }
-	      };
-
-	      //  .readAsText() initiates a file reading
-
-	      f_reader.readAsText(file);
-	      return f_reader;
-	    });
-	  }
-	}
-	function download_data(formatted_data) {
-	  console.log(formatted_data);
-	  if (formatted_data.split('\n').length > 1) {
-	    var file = new Blob([formatted_data], {
-	      type: 'text/csv'
-	    });
-	    var element = document.createElement("a");
-	    element.href = URL.createObjectURL(file);
-	    var date = new Date();
-	    var date_str = date.toLocaleDateString('ja-JP', {
-	      year: 'numeric',
-	      month: '2-digit',
-	      day: '2-digit'
-	    });
-	    element.download = 'ic_data_' + date_str.replace('/', '_') + '_' + String(date.getHours()).padStart(2, '0') + String(date.getMinutes()).padStart(2, '0') + '.csv';
-	    document.body.appendChild(element);
-	    element.click();
-	  }
-	}
-	function File_upload(_ref) {
-	  _ref.preloaded_files;
-	    _ref.store_preloaded_files;
-	    var set_loaded_files = _ref.set_loaded_files;
-	  //  https://blog.logrocket.com/using-filereader-api-preview-images-react/
-
-	  function handle_change(event) {
-	    files_load(Array.from(event.target.files), set_loaded_files);
-	  }
-	  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
-	    type: "file",
-	    accept: ".rtf",
-	    onChange: function onChange(event) {
-	      return handle_change(event);
-	    },
-	    multiple: true
-	  }));
-	}
 	function App() {
 	  var _useState = reactExports.useState('DATE,NAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,PRACTICE'),
 	    _useState2 = _slicedToArray(_useState, 2),

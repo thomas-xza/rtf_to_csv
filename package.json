@@ -6,6 +6,7 @@
    "scripts": {
       "autobuild": "rollup -c -w",
       "build": "rollup -c",
+      "serve": "serve public",
       "test": "echo \"Error: no test specified\" && exit 1"
    },
    "dependencies": {

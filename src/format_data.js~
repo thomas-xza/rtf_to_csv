@@ -87,16 +87,10 @@ export function format_data(data_as_objs, csv_header) {
 };
 
 function convert_rtf_to_plain_text(rtf) {
-
-    console.log(rtf);
-
-    const clean_rtf
+    
+    return rtf
 	.replace(/\\par[d]?/g, '')
 	.replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, '').trim();
-    
-    console.log(clean_rtf);
-    
-    return clean_rtf;
 
 };
 
