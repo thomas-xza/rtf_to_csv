@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from 'react';
-import { createRoot } from 'react-dom/client';
+import { ReactDOM } from 'react-dom/client';
+// import { createRoot } from 'react-dom/client';
 
 
 // function csv_to_obj(csv_header) {
@@ -329,12 +330,22 @@ import { createRoot } from 'react-dom/client';
 // };
 
 
-const App = function Main() {
+// const App = function Main() {
 
-    return (
-	<h1>Hello</h1>
-    )
+//     return (
+// 	<h1>Hello</h1>
+//     )
 
-};
+// };
 
-createRoot(document.getElementById('root')).render(<h1>Your App</h1>)
+function App() {
+   return (
+      <h1>Rollup is amazing!</h1>
+   );
+}
+
+ReactDOM.createRoot(document.querySelector('#root')).render(
+   <App/>
+);
+
+// createRoot(document.getElementById('root')).render(<h1>Your App</h1>)
