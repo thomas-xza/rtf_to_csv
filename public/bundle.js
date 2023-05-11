@@ -8067,13 +8067,13 @@
 	    files_load(Array.from(event.target.files), set_loaded_files);
 	  }
 	  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+	    id: "file",
 	    type: "file",
 	    accept: ".rtf",
 	    onChange: function onChange(event) {
 	      return handle_change(event);
 	    },
-	    multiple: true,
-	    name: "Choose file(s)"
+	    multiple: true
 	  }));
 	}
 	function files_load(preloaded_files, set_loaded_files) {
