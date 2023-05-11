@@ -197,31 +197,30 @@ function extract_refer_date_generic(data) {
 	
 }    
 
-function extract_refer_date(data) {
+export function extract_refer_date(data) {
 
     try {
 
-	const date_obj = Date.parse(extract_refer_date_generic(data))
-
-	return date_obj.toLocaleDateString('en-GB', {
-                     month: 'long'
-        }).toUpperCase()
-		     
-    } catch { return "" }
-
-}
-
-function extract_refer_date_month(data) {
-
-    try {
-
-	const date_obj = Date.parse(extract_refer_date_generic(data))
+	const date_obj = new Date(Date.parse(extract_refer_date_generic(data)))
 	
 	return date_obj.toLocaleDateString('en-GB', {
                      year: 'numeric',
                      month: '2-digit',
-                     day: '2-digit',
-        })
+            day: '2-digit'})
+			     
+    } catch { return "" }
+
+}
+
+export function extract_refer_date_month(data) {
+
+    try {
+
+	const date_obj = new Date(Date.parse(extract_refer_date_generic(data)))
+	
+	return date_obj.toLocaleDateString('en-GB', {
+                     month: 'long'
+        }).toUpperCase()
 		     
     } catch { return "" }
 
