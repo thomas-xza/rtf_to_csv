@@ -80,6 +80,10 @@ function add_data_to_objs(objs_arr) {
 		     day: '2-digit',
 		 }),
 
+		 'DATE_MONTH': date.toLocaleDateString('en-GB', {
+		     month: 'long'
+		 }),
+
 		 'REFERRAL TYPE': 'Email',
 
 		 'REFERRAL SOURCE': 'Lewisham Hospital',

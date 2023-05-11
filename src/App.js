@@ -2,17 +2,18 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 
 import { File_upload } from './File_upload';
+import { Csv_header_select } from './Csv_header_select';
+
 import { download_data } from './download_data';
 import { process_data } from './process_data';
 import { objs_arr_to_json, format_data } from './format_data';
 
-
 export default function App() {
 
-    const non_maternity_csv_header =
+    const non_mat_csv_header =
 	  'DATE,FORENAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,PRACTICE'
 
-    const [csv_header, set_csv_header] = useState(non_maternity_csv_header);
+    const [csv_header, set_csv_header] = useState(non_mat_csv_header);
 
     const [loaded_files, set_loaded_files] = useState([]);
 
@@ -42,8 +43,8 @@ export default function App() {
 	    <>
 
 	    <strong>CSV header:</strong> <br/>
-	    <Csv_select set_csv_header={set_csv_header} nm_csv_header={non_maternity_csv_header}/>	    
-	    <textarea className='short' name='csv_header' defaultValue={csv_header} onChange={event => set_csv_header(event.target.value)} ></textarea>
+	    <Csv_header_select non_mat_csv_header={non_mat_csv_header} set_csv_header={set_csv_header}/>
+	    <textarea className='short' name='csv_header' value={csv_header} onChange={event => set_csv_header(event.target.value)} ></textarea>
 	    <br/>
 	    <br/>
 
@@ -52,7 +53,7 @@ export default function App() {
 	    <br/>
 	    <br/>
 
-	    <strong>Data processed to CSV (automatically downloaded):</strong> <br/>
+	    <strong>Data processed to CSV (automatically downloaded after file selection):</strong> <br/>
 	    <textarea className='long' name='csv_output' value={formatted_data} readOnly ></textarea>
 	    <br/>
 
@@ -64,27 +65,3 @@ export default function App() {
 
 };
 
-function Csv_select(nm_csv_header, set_csv_header) {
-
-    function handle_click(target) {
-
-	if (target === "nm") {
-
-	    set_csv_header(nm_csv_header)
-
-	} else if (target === "m") {
-
-	    set_csv_header('FULLNAME,DATE,PLACEHOLDER,DATE_MONTH,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,PRACTICE')  
-
-	}
-
-    }
-
-    return (
-	    <>
-	    <button handle_click={"nm"}>Non-maternity</button>
-	    <button handle_click={"m"}>Maternity</button>
-	    </>
-    )
-    
-}

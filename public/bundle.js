@@ -8104,6 +8104,22 @@
 	  }
 	}
 
+	function Csv_header_select(_ref) {
+	  var non_mat_csv_header = _ref.non_mat_csv_header,
+	    set_csv_header = _ref.set_csv_header;
+	  function handle_click_nm() {
+	    set_csv_header(non_mat_csv_header);
+	  }
+	  function handle_click_m() {
+	    set_csv_header('FULLNAME,DATE,PLACEHOLDER,DATE_MONTH,MOB,DOB,POST CODE,REFERRER NAME,PRACTICE');
+	  }
+	  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+	    onClick: handle_click_nm
+	  }, "Non-maternity"), /*#__PURE__*/React.createElement("button", {
+	    onClick: handle_click_m
+	  }, "Maternity"));
+	}
+
 	function download_data(formatted_data) {
 	  console.log(formatted_data);
 	  if (formatted_data.split('\n').length > 1) {
@@ -8281,6 +8297,9 @@
 	        month: '2-digit',
 	        day: '2-digit'
 	      }),
+	      'DATE_MONTH': date.toLocaleDateString('en-GB', {
+	        month: 'long'
+	      }),
 	      'REFERRAL TYPE': 'Email',
 	      'REFERRAL SOURCE': 'Lewisham Hospital',
 	      'PLACEHOLDER': ''
@@ -8313,8 +8332,8 @@
 	}
 
 	function App() {
-	  var non_maternity_csv_header = 'DATE,FORENAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,PRACTICE';
-	  var _useState = reactExports.useState(non_maternity_csv_header),
+	  var non_mat_csv_header = 'DATE,FORENAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,PRACTICE';
+	  var _useState = reactExports.useState(non_mat_csv_header),
 	    _useState2 = _slicedToArray(_useState, 2),
 	    csv_header = _useState2[0],
 	    set_csv_header = _useState2[1];
@@ -8339,19 +8358,19 @@
 	  reactExports.useEffect(function () {
 	    download_data(formatted_data);
 	  }, [formatted_data]);
-	  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("strong", null, "CSV header:"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(Csv_select, {
-	    set_csv_header: set_csv_header,
-	    nm_csv_header: non_maternity_csv_header
+	  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("strong", null, "CSV header:"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(Csv_header_select, {
+	    non_mat_csv_header: non_mat_csv_header,
+	    set_csv_header: set_csv_header
 	  }), /*#__PURE__*/React.createElement("textarea", {
 	    className: "short",
 	    name: "csv_header",
-	    defaultValue: csv_header,
+	    value: csv_header,
 	    onChange: function onChange(event) {
 	      return set_csv_header(event.target.value);
 	    }
 	  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Select RTF file(s):"), /*#__PURE__*/React.createElement(File_upload, {
 	    set_loaded_files: set_loaded_files
-	  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Data processed to CSV (automatically downloaded):"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("textarea", {
+	  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Data processed to CSV (automatically downloaded after file selection):"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("textarea", {
 	    className: "long",
 	    name: "csv_output",
 	    value: formatted_data,
@@ -8362,13 +8381,6 @@
 	    value: json_data,
 	    readOnly: true
 	  }));
-	}
-	function Csv_select(nm_csv_header, set_csv_header) {
-	  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
-	    handle_click: "nm"
-	  }, "Non-maternity"), /*#__PURE__*/React.createElement("button", {
-	    handle_click: "m"
-	  }, "Maternity"));
 	}
 
 	createRoot(document.getElementById('root')).render( /*#__PURE__*/React.createElement(App, null));
