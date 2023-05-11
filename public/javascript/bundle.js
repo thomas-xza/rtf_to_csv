@@ -8169,7 +8169,7 @@
 	function extract_fullname(data) {
 	  try {
 	    var names = extract_names(data);
-	    return names[1] + " " + names[0];
+	    return names[1].trim() + " " + names[0];
 	  } catch (_unused) {
 	    return "";
 	  }
@@ -8192,7 +8192,16 @@
 	}
 	function extract_dob(data) {
 	  try {
-	    return data.match(/DOB.*Age/)[0].match(/[0-9]{4}/)[0].trim();
+	    var extraction = data.match(/DOB.*Age/)[0].replace('DOB', '').replace('Age', '').trim();
+	    console.log(extraction);
+	    var date_obj = new Date(Date.parse(extraction));
+	    return date_obj.toLocaleDateString('en-GB', {
+	      year: 'numeric',
+	      month: '2-digit',
+	      day: '2-digit'
+	    });
+
+	    // return data.match(/DOB.*Age/)[0].trim();
 	  } catch (_unused4) {
 	    return "";
 	  }
@@ -8254,22 +8263,22 @@
 	}
 	function extract_refer_date(data) {
 	  try {
-	    var date_obj = Date.parse(extract_refer_date_generic(data));
+	    var date_obj = new Date(Date.parse(extract_refer_date_generic(data)));
 	    return date_obj.toLocaleDateString('en-GB', {
-	      month: 'long'
-	    }).toUpperCase();
+	      year: 'numeric',
+	      month: '2-digit',
+	      day: '2-digit'
+	    });
 	  } catch (_unused11) {
 	    return "";
 	  }
 	}
 	function extract_refer_date_month(data) {
 	  try {
-	    var date_obj = Date.parse(extract_refer_date_generic(data));
+	    var date_obj = new Date(Date.parse(extract_refer_date_generic(data)));
 	    return date_obj.toLocaleDateString('en-GB', {
-	      year: 'numeric',
-	      month: '2-digit',
-	      day: '2-digit'
-	    });
+	      month: 'long'
+	    }).toUpperCase();
 	  } catch (_unused12) {
 	    return "";
 	  }
@@ -8363,7 +8372,7 @@
 
 	function App() {
 	  var non_mat_csv_header = 'DATE,FORENAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,GP';
-	  var mat_csv_header = 'FULLNAME,DATE,PLACEHOLDER,DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,REFERRING TEAM,PLACEHOLDER,PLACEHOLDER,GP';
+	  var mat_csv_header = 'FULLNAME,REF DATE,PLACEHOLDER,REF DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,REFERRING TEAM,PLACEHOLDER,PLACEHOLDER,GP';
 	  var _useState = reactExports.useState(non_mat_csv_header),
 	    _useState2 = _slicedToArray(_useState, 2),
 	    csv_header = _useState2[0],

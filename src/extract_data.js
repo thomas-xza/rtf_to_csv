@@ -54,7 +54,7 @@ function extract_fullname(data) {
 
 	const names = extract_names(data)
 
-	return names[1] + " " + names[0];
+	return names[1].trim() + " " + names[0];
 
     } catch { return "" }
     
@@ -187,7 +187,7 @@ function extract_refer_dept(data) {
     
 }
 
-function extract_refer_name(data) {
+export function extract_refer_name(data) {
 
     try {
 

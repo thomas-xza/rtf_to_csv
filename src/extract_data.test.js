@@ -1,8 +1,9 @@
 import { extract_dob,
 	 extract_refer_date_month,
-	 extract_refer_date } from './extract_data.js';
+	 extract_refer_date,
+	 extract_refer_name } from './extract_data.js';
 
-test('valid 1', () => { 
+test('date_ddmmyyyy', () => { 
     expect(
 	extract_refer_date(
 	    'Requested on : 02 MAY 2023, 10:46Patient Name'
@@ -13,7 +14,7 @@ test('valid 1', () => {
 	);
 });
 
-test('valid 2', () => { 
+test('date_month', () => { 
     expect(
 	extract_refer_date_month(
 	    'Requested on : 01 APR 2023, 10:50Patient Name'	    
@@ -25,7 +26,7 @@ test('valid 2', () => {
 });
 
 
-test('valid 3', () => { 
+test('dob', () => { 
     expect(
 	extract_dob(
 	    'DOB: 01 APR 1990 Age'
@@ -33,6 +34,17 @@ test('valid 3', () => {
     )
 	.toBe(
 	    '01/04/1990'
+	);
+});
+
+test('ref_name', () => { 
+    expect(
+	extract_refer_name(
+	    'Requesting Doctor: Bell , MadeleineConsultant in Charge'
+	)
+    )
+	.toBe(
+	    'Bell , Madeleine'
 	);
 });
 
