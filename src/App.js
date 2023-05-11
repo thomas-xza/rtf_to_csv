@@ -13,6 +13,9 @@ export default function App() {
     const non_mat_csv_header =
 	  'DATE,FORENAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,PRACTICE'
 
+    const mat_csv_header =
+	  'FULLNAME,DATE,PLACEHOLDER,DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,PLACEHOLDER,PLACEHOLDER,PLACEHOLDER,PRACTICE'
+
     const [csv_header, set_csv_header] = useState(non_mat_csv_header);
 
     const [loaded_files, set_loaded_files] = useState([]);
@@ -43,25 +46,50 @@ export default function App() {
 	    <>
 
 	    <strong>CSV header:</strong> <br/>
-	    <Csv_header_select non_mat_csv_header={non_mat_csv_header} set_csv_header={set_csv_header}/>
-	    <textarea className='short' name='csv_header' value={csv_header} onChange={event => set_csv_header(event.target.value)} ></textarea>
-	    <br/>
+	    
+	    <Csv_header_select
+	non_mat_csv_header={non_mat_csv_header}
+	mat_csv_header={mat_csv_header}
+	set_csv_header={set_csv_header}/>
+	    
+	    <textarea
+	className='short'
+	name='csv_header'
+	value={csv_header}
+	onChange={event => set_csv_header(event.target.value)} >
+	    </textarea>
+
+	    <br/>    
 	    <br/>
 
 	    <strong>Select RTF file(s):</strong>
+	    
 	    <File_upload set_loaded_files={set_loaded_files} />
+	    
 	    <br/>
 	    <br/>
 
-	    <strong>Data processed to CSV (automatically downloaded after file selection):</strong> <br/>
-	    <textarea className='long' name='csv_output' value={formatted_data} readOnly ></textarea>
+	    <strong>Data processed to CSV (automatically downloaded after file selection):</strong>
+	    <br/>
+
+	    <textarea
+	className='long'
+	name='csv_output'
+	value={formatted_data}
+	readOnly >
+	    </textarea>
 	    <br/>
 
 	    <strong>Raw JSON data structures:</strong> <br/>
-	    <textarea className='long' name='json_data' value={json_data} readOnly ></textarea>
+	    
+	    <textarea
+	className='long'
+	name='json_data'
+	value={json_data}
+	readOnly >
+	    </textarea>
 	    
 	    </>
     )
 
 };
-

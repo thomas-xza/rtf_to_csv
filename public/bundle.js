@@ -8106,18 +8106,19 @@
 
 	function Csv_header_select(_ref) {
 	  var non_mat_csv_header = _ref.non_mat_csv_header,
+	    mat_csv_header = _ref.mat_csv_header,
 	    set_csv_header = _ref.set_csv_header;
 	  function handle_click_nm() {
 	    set_csv_header(non_mat_csv_header);
 	  }
 	  function handle_click_m() {
-	    set_csv_header('FULLNAME,DATE,PLACEHOLDER,DATE_MONTH,MOB,DOB,POST CODE,REFERRER NAME,PRACTICE');
+	    set_csv_header(mat_csv_header);
 	  }
 	  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
 	    onClick: handle_click_nm
-	  }, "Non-maternity"), /*#__PURE__*/React.createElement("button", {
+	  }, "Non-maternity smoker"), /*#__PURE__*/React.createElement("button", {
 	    onClick: handle_click_m
-	  }, "Maternity"));
+	  }, "Maternity smoker"));
 	}
 
 	function download_data(formatted_data) {
@@ -8333,6 +8334,7 @@
 
 	function App() {
 	  var non_mat_csv_header = 'DATE,FORENAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,PRACTICE';
+	  var mat_csv_header = 'FULLNAME,DATE,PLACEHOLDER,DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,PLACEHOLDER,PLACEHOLDER,PLACEHOLDER,PRACTICE';
 	  var _useState = reactExports.useState(non_mat_csv_header),
 	    _useState2 = _slicedToArray(_useState, 2),
 	    csv_header = _useState2[0],
@@ -8360,6 +8362,7 @@
 	  }, [formatted_data]);
 	  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("strong", null, "CSV header:"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(Csv_header_select, {
 	    non_mat_csv_header: non_mat_csv_header,
+	    mat_csv_header: mat_csv_header,
 	    set_csv_header: set_csv_header
 	  }), /*#__PURE__*/React.createElement("textarea", {
 	    className: "short",
@@ -8370,7 +8373,7 @@
 	    }
 	  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Select RTF file(s):"), /*#__PURE__*/React.createElement(File_upload, {
 	    set_loaded_files: set_loaded_files
-	  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Data processed to CSV (automatically downloaded after file selection):"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("textarea", {
+	  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Data processed to CSV (automatically downloaded after file selection):"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("textarea", {
 	    className: "long",
 	    name: "csv_output",
 	    value: formatted_data,
