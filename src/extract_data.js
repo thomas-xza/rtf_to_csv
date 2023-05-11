@@ -83,11 +83,25 @@ function extract_surname(data) {
     } catch { return "" }
 }
 
-function extract_dob(data) {
+export function extract_dob(data) {
 
     try {
 
-    return data.match(/DOB.*Age/)[0].match(/[0-9]{4}/)[0].trim();
+	const extraction = data
+	    .match(/DOB.*Age/)[0]
+	    .replace('DOB','')
+	      .replace('Age','').trim()
+
+	console.log(extraction)
+	
+	const date_obj = new Date(Date.parse(extraction))
+	
+	return date_obj.toLocaleDateString('en-GB', {
+                     year: 'numeric',
+                     month: '2-digit',
+            day: '2-digit' })
+	
+    // return data.match(/DOB.*Age/)[0].trim();
     
     } catch { return "" }
     
