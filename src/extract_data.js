@@ -10,9 +10,11 @@ export function extract_data_from_rtf(obj, data) {
 
     return { ...obj,
 	     
-	     'NAME': extract_forename(data),
+	     'FORENAME': extract_forename(data),
 	     
 	     'SURNAME': extract_surname(data),
+
+	     'FULLNAME': extract_fullname(data),
 	     
 	     'DOB': extract_dob(data),
 	     
@@ -40,6 +42,18 @@ function extract_names(data) {
 	  .replace('Sex:', '')
 	  .split(',');
 
+}
+
+function extract_fullname(data) {
+
+    try {
+
+	const names = extract_names(data)
+
+	return names[1] + " " + names[0];
+
+    } catch { return "" }
+    
 }
 
 function extract_forename(data) {

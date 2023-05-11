@@ -82,7 +82,9 @@ function add_data_to_objs(objs_arr) {
 
 		 'REFERRAL TYPE': 'Email',
 
-		 'REFERRAL SOURCE': 'Lewisham Hospital'
+		 'REFERRAL SOURCE': 'Lewisham Hospital',
+		 
+		 'PLACEHOLDER': ''
 		 
 	       };
 

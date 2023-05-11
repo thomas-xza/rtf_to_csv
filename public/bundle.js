@@ -8130,8 +8130,9 @@
 	  // console.log('text data', typeof text_data, data);
 
 	  return _objectSpread2(_objectSpread2({}, obj), {}, {
-	    'NAME': extract_forename(data),
+	    'FORENAME': extract_forename(data),
 	    'SURNAME': extract_surname(data),
+	    'FULLNAME': extract_fullname(data),
 	    'DOB': extract_dob(data),
 	    'MOB': extract_mobile(data),
 	    'TEL': extract_hometel(data),
@@ -8145,11 +8146,19 @@
 	function extract_names(data) {
 	  return data.match(/Name:.*Sex:/)[0].replace('Name:', '').replace('Sex:', '').split(',');
 	}
+	function extract_fullname(data) {
+	  try {
+	    var names = extract_names(data);
+	    return names[1] + " " + names[0];
+	  } catch (_unused) {
+	    return "";
+	  }
+	}
 	function extract_forename(data) {
 	  try {
 	    var names = extract_names(data);
 	    return names[1].trim();
-	  } catch (_unused) {
+	  } catch (_unused2) {
 	    return "";
 	  }
 	}
@@ -8157,14 +8166,14 @@
 	  try {
 	    var names = extract_names(data);
 	    return names[0].trim();
-	  } catch (_unused2) {
+	  } catch (_unused3) {
 	    return "";
 	  }
 	}
 	function extract_dob(data) {
 	  try {
 	    return data.match(/DOB.*Age/)[0].match(/[0-9]{4}/)[0].trim();
-	  } catch (_unused3) {
+	  } catch (_unused4) {
 	    return "";
 	  }
 	}
@@ -8175,7 +8184,7 @@
 	  try {
 	    var phones = extract_phones(data);
 	    return phones.match(/Mobile = [0-9]*/)[0].replace('Mobile = ', '').trim();
-	  } catch (_unused4) {
+	  } catch (_unused5) {
 	    return "";
 	  }
 	}
@@ -8183,7 +8192,7 @@
 	  try {
 	    var phones = extract_phones(data);
 	    return phones.match(/Home = [0-9]*/)[0].replace('Home = ', '').trim();
-	  } catch (_unused5) {
+	  } catch (_unused6) {
 	    return "";
 	  }
 	}
@@ -8194,7 +8203,7 @@
 	  try {
 	    var addr = extract_addr(data);
 	    return addr[0].trim();
-	  } catch (_unused6) {
+	  } catch (_unused7) {
 	    return "";
 	  }
 	}
@@ -8202,28 +8211,28 @@
 	  try {
 	    var addr = extract_addr(data);
 	    return addr.slice(-1)[0].trim();
-	  } catch (_unused7) {
+	  } catch (_unused8) {
 	    return "";
 	  }
 	}
 	function extract_refer_dept(data) {
 	  try {
 	    return data.match(/Referring Speciality.*Other/)[0].replace('Referring Speciality', '').replace('Other', '').replace(',', '').trim();
-	  } catch (_unused8) {
+	  } catch (_unused9) {
 	    return "";
 	  }
 	}
 	function extract_refer_name(data) {
 	  try {
 	    return data.match(/Requesting Doctor.*Consultant in charge/)[0].replace('Requesting Doctor:', '').replace('Consultant in charge', '').replace(', ', '').trim();
-	  } catch (_unused9) {
+	  } catch (_unused10) {
 	    return "";
 	  }
 	}
 	function extract_gp(data) {
 	  try {
 	    return data.match(/Practice.*_/)[0].replace('Practice:', '').replace(/,.*/, '').trim();
-	  } catch (_unused10) {
+	  } catch (_unused11) {
 	    return "";
 	  }
 	}
@@ -8273,7 +8282,8 @@
 	        day: '2-digit'
 	      }),
 	      'REFERRAL TYPE': 'Email',
-	      'REFERRAL SOURCE': 'Lewisham Hospital'
+	      'REFERRAL SOURCE': 'Lewisham Hospital',
+	      'PLACEHOLDER': ''
 	    });
 	  });
 	  return new_objs;
@@ -8303,7 +8313,8 @@
 	}
 
 	function App() {
-	  var _useState = reactExports.useState('DATE,NAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,PRACTICE'),
+	  var non_maternity_csv_header = 'DATE,FORENAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,PRACTICE';
+	  var _useState = reactExports.useState(non_maternity_csv_header),
 	    _useState2 = _slicedToArray(_useState, 2),
 	    csv_header = _useState2[0],
 	    set_csv_header = _useState2[1];
@@ -8328,16 +8339,19 @@
 	  reactExports.useEffect(function () {
 	    download_data(formatted_data);
 	  }, [formatted_data]);
-	  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("strong", null, "CSV header:"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("textarea", {
+	  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("strong", null, "CSV header:"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(Csv_select, {
+	    set_csv_header: set_csv_header,
+	    nm_csv_header: non_maternity_csv_header
+	  }), /*#__PURE__*/React.createElement("textarea", {
 	    className: "short",
 	    name: "csv_header",
 	    defaultValue: csv_header,
 	    onChange: function onChange(event) {
 	      return set_csv_header(event.target.value);
 	    }
-	  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(File_upload, {
+	  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Select RTF file(s):"), /*#__PURE__*/React.createElement(File_upload, {
 	    set_loaded_files: set_loaded_files
-	  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Data processed to CSV (automatically downloaded):"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("textarea", {
+	  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "Data processed to CSV (automatically downloaded):"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("textarea", {
 	    className: "long",
 	    name: "csv_output",
 	    value: formatted_data,
@@ -8348,6 +8362,13 @@
 	    value: json_data,
 	    readOnly: true
 	  }));
+	}
+	function Csv_select(nm_csv_header, set_csv_header) {
+	  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+	    handle_click: "nm"
+	  }, "Non-maternity"), /*#__PURE__*/React.createElement("button", {
+	    handle_click: "m"
+	  }, "Maternity"));
 	}
 
 	createRoot(document.getElementById('root')).render( /*#__PURE__*/React.createElement(App, null));
