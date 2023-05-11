@@ -8072,7 +8072,8 @@
 	    onChange: function onChange(event) {
 	      return handle_change(event);
 	    },
-	    multiple: true
+	    multiple: true,
+	    name: "Choose file(s)"
 	  }));
 	}
 	function files_load(preloaded_files, set_loaded_files) {
@@ -8157,7 +8158,7 @@
 	    'POST CODE': extract_postcode(data),
 	    'REFERRER NAME': extract_refer_name(data),
 	    'REFERRING DEPT/ORG': extract_refer_dept(data),
-	    'PRACTICE': extract_gp(data)
+	    'GP': extract_gp(data)
 	  });
 	}
 	function extract_names(data) {
@@ -8334,8 +8335,8 @@
 	}
 
 	function App() {
-	  var non_mat_csv_header = 'DATE,FORENAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,PRACTICE';
-	  var mat_csv_header = 'FULLNAME,DATE,PLACEHOLDER,DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,REFERRING TEAM,PLACEHOLDER,PLACEHOLDER,PRACTICE';
+	  var non_mat_csv_header = 'DATE,FORENAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,GP';
+	  var mat_csv_header = 'FULLNAME,DATE,PLACEHOLDER,DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,REFERRING TEAM,PLACEHOLDER,PLACEHOLDER,GP';
 	  var _useState = reactExports.useState(non_mat_csv_header),
 	    _useState2 = _slicedToArray(_useState, 2),
 	    csv_header = _useState2[0],

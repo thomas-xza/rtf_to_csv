@@ -30,7 +30,7 @@ export function extract_data_from_rtf(obj, data) {
 
 	     'REFERRING DEPT/ORG': extract_refer_dept(data),
 
-	     'PRACTICE': extract_gp(data) }
+	     'GP': extract_gp(data) }
     
 };
 

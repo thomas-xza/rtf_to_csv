@@ -13,7 +13,7 @@ export function File_upload({ preloaded_files, store_preloaded_files, set_loaded
 
     return(
 	    <div>
-	    <input type="file" accept=".rtf" onChange={(event) => handle_change(event)} multiple/> 
+	    <input type="file" accept=".rtf" onChange={(event) => handle_change(event)} multiple name="Choose file(s)"/> 
 	    </div>
     )
     
