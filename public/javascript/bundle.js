@@ -8158,11 +8158,13 @@
 	    'POST CODE': extract_postcode(data),
 	    'REFERRER NAME': extract_refer_name(data),
 	    'REFERRING DEPT/ORG': extract_refer_dept(data),
+	    'REF DATE': extract_refer_date(data),
+	    'REF DATE_MONTH': extract_refer_date_month(data),
 	    'GP': extract_gp(data)
 	  });
 	}
 	function extract_names(data) {
-	  return data.match(/Name:.*Sex:/)[0].replace('Name:', '').replace('Sex:', '').split(',');
+	  return data.match(/Name:.*Sex:/)[0].replace('Name:', '').replace('Sex:', '').trim().split(',');
 	}
 	function extract_fullname(data) {
 	  try {
@@ -8175,7 +8177,7 @@
 	function extract_forename(data) {
 	  try {
 	    var names = extract_names(data);
-	    return names[1].trim();
+	    return names[1];
 	  } catch (_unused2) {
 	    return "";
 	  }
@@ -8183,7 +8185,7 @@
 	function extract_surname(data) {
 	  try {
 	    var names = extract_names(data);
-	    return names[0].trim();
+	    return names[0];
 	  } catch (_unused3) {
 	    return "";
 	  }
@@ -8247,10 +8249,33 @@
 	    return "";
 	  }
 	}
+	function extract_refer_date_generic(data) {
+	  return data.match(/Requested on.*Patient Name/)[0].replace('Requested on :', '').replace('Patient Name', '').trim().split(',')[0];
+	}
+	function extract_refer_date(data) {
+	  try {
+	    var dd_month_yyyy = extract_refer_date_generic(data);
+	    var date_obj = convert_date_to_obj(dd_month_yyyy);
+	  } catch (_unused11) {
+	    return "";
+	  }
+	}
+	function extract_refer_date_month(data) {
+	  try {
+	    var dd_month_yyyy = extract_refer_date_generic(data);
+
+	    // return convert_month_to_num(dd_month_yyyy)
+	  } catch (_unused12) {
+	    return "";
+	  }
+	}
+	function convert_date_to_obj(date) {
+	  console.log(date.toLocaleDateString('en-GB'));
+	}
 	function extract_gp(data) {
 	  try {
 	    return data.match(/Practice.*_/)[0].replace('Practice:', '').replace(/,.*/, '').trim();
-	  } catch (_unused11) {
+	  } catch (_unused13) {
 	    return "";
 	  }
 	}

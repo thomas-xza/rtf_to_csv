@@ -30,6 +30,10 @@ export function extract_data_from_rtf(obj, data) {
 
 	     'REFERRING DEPT/ORG': extract_refer_dept(data),
 
+	     'REF DATE': extract_refer_date(data),
+
+	     'REF DATE_MONTH': extract_refer_date_month(data),
+
 	     'GP': extract_gp(data) }
     
 };
@@ -39,7 +43,7 @@ function extract_names(data) {
 
     return data.match(/Name:.*Sex:/)[0]
 	  .replace('Name:','')
-	  .replace('Sex:', '')
+	.replace('Sex:', '').trim()
 	  .split(',');
 
 }
@@ -62,7 +66,7 @@ function extract_forename(data) {
 
 	const names = extract_names(data)
 
-	return names[1].trim();
+	return names[1];
 
     } catch { return "" }
     
@@ -74,7 +78,7 @@ function extract_surname(data) {
 
     const names = extract_names(data)
     
-    return names[0].trim();
+    return names[0];
 
     } catch { return "" }
 }
@@ -180,6 +184,60 @@ function extract_refer_name(data) {
 	.replace(', ','').trim();
 
     } catch { return "" }
+
+}
+
+function extract_refer_date_generic(data) {
+
+	return data
+	    .match(/Requested on.*Patient Name/)[0]
+	    .replace('Requested on :','')
+	    .replace('Patient Name','').trim()
+	    .split(',')[0]
+	
+}    
+
+function extract_refer_date(data) {
+
+    try {
+
+	const date_obj = Date.parse(extract_refer_date_generic(data))
+
+	return date_obj.toLocaleDateString('en-GB', {
+                     month: 'long'
+        }).toUpperCase()
+		     
+    } catch { return "" }
+
+}
+
+function extract_refer_date_month(data) {
+
+    try {
+
+	const date_obj = Date.parse(extract_refer_date_generic(data))
+	
+	return date_obj.toLocaleDateString('en-GB', {
+                     year: 'numeric',
+                     month: '2-digit',
+                     day: '2-digit',
+        }))
+		     
+    } catch { return "" }
+
+}
+
+function convert_date_to_obj(date) {
+
+    const date_obj = Date.parse(date);
+
+    console.log(
+	date.toLocaleDateString('en-GB',
+				year: 'numeric',
+				month: '2-digit',
+				day: '2-digit'
+			       )
+    )
 
 }
 
