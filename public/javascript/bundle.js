@@ -8254,23 +8254,25 @@
 	}
 	function extract_refer_date(data) {
 	  try {
-	    var dd_month_yyyy = extract_refer_date_generic(data);
-	    var date_obj = convert_date_to_obj(dd_month_yyyy);
+	    var date_obj = Date.parse(extract_refer_date_generic(data));
+	    return date_obj.toLocaleDateString('en-GB', {
+	      month: 'long'
+	    }).toUpperCase();
 	  } catch (_unused11) {
 	    return "";
 	  }
 	}
 	function extract_refer_date_month(data) {
 	  try {
-	    var dd_month_yyyy = extract_refer_date_generic(data);
-
-	    // return convert_month_to_num(dd_month_yyyy)
+	    var date_obj = Date.parse(extract_refer_date_generic(data));
+	    return date_obj.toLocaleDateString('en-GB', {
+	      year: 'numeric',
+	      month: '2-digit',
+	      day: '2-digit'
+	    });
 	  } catch (_unused12) {
 	    return "";
 	  }
-	}
-	function convert_date_to_obj(date) {
-	  console.log(date.toLocaleDateString('en-GB'));
 	}
 	function extract_gp(data) {
 	  try {
