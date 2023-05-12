@@ -8412,7 +8412,7 @@
 	  reactExports.useEffect(function () {
 	    download_data(formatted_data);
 	  }, [formatted_data]);
-	  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("strong", null, "CSV header:"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(Csv_header_select, {
+	  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("strong", null, "CSV header template:"), " ", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(Csv_header_select, {
 	    non_mat_csv_header: non_mat_csv_header,
 	    mat_csv_header: mat_csv_header,
 	    set_csv_header: set_csv_header

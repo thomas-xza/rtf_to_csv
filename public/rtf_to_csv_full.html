@@ -8250,7 +8250,7 @@ button {
 	function extract_forename(data) {
 	  try {
 	    var names = extract_names(data);
-	    return names[1].trim();
+	    return title_case(names[1].trim());
 	  } catch (_unused2) {
 	    return "";
 	  }
@@ -8258,7 +8258,7 @@ button {
 	function extract_surname(data) {
 	  try {
 	    var names = extract_names(data);
-	    return names[0];
+	    return title_case(names[0]);
 	  } catch (_unused3) {
 	    return "";
 	  }

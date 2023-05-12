@@ -45,7 +45,7 @@ export default function App() {
     return (
 	    <>
 
-	    <strong>CSV header:</strong> <br/>
+	    <strong>CSV header template:</strong> <br/>
 	    
 	    <Csv_header_select
 	non_mat_csv_header={non_mat_csv_header}
