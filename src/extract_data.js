@@ -32,6 +32,8 @@ export function extract_data_from_rtf(obj, data) {
 
 	     'REF DATE': extract_refer_date(data),
 
+	     'REF DATE_STR': extract_refer_date_str(data),
+
 	     'REF DATE_MONTH': extract_refer_date_month(data),
 
 	     'GP': extract_gp(data) }
@@ -217,12 +219,23 @@ export function extract_refer_date(data) {
 
     try {
 
-	const date_obj = new Date(Date.parse(extract_refer_date_generic(data)))
+	const date_obj = new
+	Date(Date.parse(extract_refer_date_generic(data)))
 	
-	return date_obj.toLocaleDateString('en-GB', {
-                     year: 'numeric',
-                     month: '2-digit',
-            day: '2-digit'})
+	return date_obj.toLocaleDateString('en-GB', { year: 'numeric',
+                     month: '2-digit', day: '2-digit'})
+			     
+    } catch { return "" }
+
+}
+
+export function extract_refer_date_str(data) {
+
+    try {
+
+	const refer_date_str = extract_refer_date(data)
+
+	return "- " + refer_date_str
 			     
     } catch { return "" }
 
