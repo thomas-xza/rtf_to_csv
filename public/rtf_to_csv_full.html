@@ -41,13 +41,13 @@ button {
 </style>
 <!-- <link rel="stylesheet" href="./css/stylize.css"> -->
 
-<title>RTF-to-CSV v1.0</title>
+<title>RTF-to-CSV v1.01</title>
 
 </head>
 
 <body>
 
-  <h1>RTF-to-CSV v1.0</h1>
+  <h1>RTF-to-CSV v1.01</h1>
     <h2><strong>How this works</strong></h2>
 
     1. Select/input the CSV template that the data is to be fit into, or leave it as the default as of 2023 (note: if you make changes, the header names <em>must</em> match the current ones).   
@@ -8453,7 +8453,7 @@ button {
 
 	function App() {
 	  var non_mat_csv_header = 'DATE,FORENAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,GP';
-	  var mat_csv_header = 'FULLNAME,REF DATE_STR,PLACEHOLDER,REF DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,REFERRING TEAM,PLACEHOLDER,PLACEHOLDER,GP';
+	  var mat_csv_header = 'FULLNAME,REF DATE_STR,PLACEHOLDER,REF DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,PLACEHOLDER,PLACEHOLDER,PLACEHOLDER,GP';
 	  var _useState = reactExports.useState(non_mat_csv_header),
 	    _useState2 = _slicedToArray(_useState, 2),
 	    csv_header = _useState2[0],

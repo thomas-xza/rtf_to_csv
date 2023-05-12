@@ -41,7 +41,7 @@ export function extract_data_from_rtf(obj, data) {
 };
 
 
-function extract_names(data) {
+export function extract_names(data) {
 
     return data.match(/Name:.*Sex:/)[0]
 	  .replace('Name:','')
@@ -50,19 +50,19 @@ function extract_names(data) {
 
 }
 
-function extract_fullname(data) {
+export function extract_fullname(data) {
 
     try {
 
 	const names = extract_names(data)
 
-	return names[1].trim() + " " + names[0];
+	return title_case(names[1].trim() + " " + names[0]);
 
     } catch { return "" }
     
 }
 
-function extract_forename(data) {
+export function extract_forename(data) {
 
     try {
 
@@ -74,7 +74,7 @@ function extract_forename(data) {
     
 }
 
-function extract_surname(data) {
+export function extract_surname(data) {
 
     try {
 
@@ -108,7 +108,7 @@ export function extract_dob(data) {
     
 }
 
-function extract_phones(data) {
+export function extract_phones(data) {
     
     return data.match(/Telephone.*Hospital/)[0]
 	.replace('Telephone:','')
@@ -117,7 +117,7 @@ function extract_phones(data) {
     
 }
 
-function extract_mobile(data) {
+export function extract_mobile(data) {
 
     try {
 
@@ -130,7 +130,7 @@ function extract_mobile(data) {
     
 }
 
-function extract_hometel(data) {
+export function extract_hometel(data) {
 
     try {
 
@@ -143,7 +143,7 @@ function extract_hometel(data) {
     
 }
 
-function extract_addr(data) {
+export function extract_addr(data) {
 
     return data.match(/Address.*Patient Telephone/)[0]
 	  .replace('Address:','')
@@ -152,7 +152,7 @@ function extract_addr(data) {
 
 }
 
-function extract_addr_line(data) {
+export function extract_addr_line(data) {
 
     try {
 
@@ -163,7 +163,7 @@ function extract_addr_line(data) {
     } catch { return "" }
 }
 
-function extract_postcode(data) {
+export function extract_postcode(data) {
 
     try {
 
@@ -175,7 +175,7 @@ function extract_postcode(data) {
     
 }
 
-function extract_refer_dept(data) {
+export function extract_refer_dept(data) {
 
     try {
 
@@ -199,13 +199,13 @@ export function extract_refer_name(data) {
 	      .replace('Consultant in Charge', '').trim()
 	      .split(',')
 
-	return names[1].trim() + " " + names[0].trim()
+	return title_case(names[1].trim() + " " + names[0].trim())
 
     } catch { return "" }
 
 }
 
-function extract_refer_date_generic(data) {
+export function extract_refer_date_generic(data) {
 
 	return data
 	    .match(/Requested on.*Patient Name/)[0]
@@ -255,7 +255,7 @@ export function extract_refer_date_month(data) {
 
 }
 
-function convert_date_to_obj(date) {
+export function convert_date_to_obj(date) {
 
     const date_obj = Date.parse(date);
 
@@ -267,7 +267,7 @@ function convert_date_to_obj(date) {
 
 }
 
-function extract_gp(data) {
+export function extract_gp(data) {
 
     try {
 
@@ -278,5 +278,15 @@ function extract_gp(data) {
 	    .trim();
 
     } catch { return "" }
+    
+}
+
+export function title_case(str) {
+    
+    return str.toLowerCase().split(' ').map(function(word) {
+	
+	return (word.charAt(0).toUpperCase() + word.slice(1));
+	
+    }).join(' ');
     
 }

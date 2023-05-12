@@ -1,4 +1,5 @@
 import { extract_dob,
+	 extract_fullname,
 	 extract_refer_date_month,
 	 extract_refer_date,
 	 extract_refer_name } from './extract_data.js';
@@ -38,6 +39,17 @@ test('dob', () => {
 });
 
 test('ref_name', () => { 
+    expect(
+	extract_refer_name(
+	    'Requesting Doctor: Bell , MadeleineConsultant in Charge'
+	)
+    )
+	.toBe(
+	    'Madeleine Bell'
+	);
+});
+
+test('fullname', () => { 
     expect(
 	extract_refer_name(
 	    'Requesting Doctor: Bell , MadeleineConsultant in Charge'

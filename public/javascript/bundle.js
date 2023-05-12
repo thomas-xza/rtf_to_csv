@@ -8170,7 +8170,7 @@
 	function extract_fullname(data) {
 	  try {
 	    var names = extract_names(data);
-	    return names[1].trim() + " " + names[0];
+	    return title_case(names[1].trim() + " " + names[0]);
 	  } catch (_unused) {
 	    return "";
 	  }
@@ -8254,7 +8254,7 @@
 	function extract_refer_name(data) {
 	  try {
 	    var names = data.match(/Requesting Doctor.*Consultant in Charge/)[0].replace('Requesting Doctor:', '').replace('Consultant in Charge', '').trim().split(',');
-	    return names[1].trim() + " " + names[0].trim();
+	    return title_case(names[1].trim() + " " + names[0].trim());
 	  } catch (_unused10) {
 	    return "";
 	  }
@@ -8298,6 +8298,11 @@
 	  } catch (_unused14) {
 	    return "";
 	  }
+	}
+	function title_case(str) {
+	  return str.toLowerCase().split(' ').map(function (word) {
+	    return word.charAt(0).toUpperCase() + word.slice(1);
+	  }).join(' ');
 	}
 
 	function process_data(loaded_files, csv_header) {
@@ -8381,7 +8386,7 @@
 
 	function App() {
 	  var non_mat_csv_header = 'DATE,FORENAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,GP';
-	  var mat_csv_header = 'FULLNAME,REF DATE_STR,PLACEHOLDER,REF DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,REFERRING TEAM,PLACEHOLDER,PLACEHOLDER,GP';
+	  var mat_csv_header = 'FULLNAME,REF DATE_STR,PLACEHOLDER,REF DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,PLACEHOLDER,PLACEHOLDER,PLACEHOLDER,GP';
 	  var _useState = reactExports.useState(non_mat_csv_header),
 	    _useState2 = _slicedToArray(_useState, 2),
 	    csv_header = _useState2[0],
