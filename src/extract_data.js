@@ -92,8 +92,6 @@ export function extract_dob(data) {
 	    .replace('DOB','')
 	      .replace('Age','').trim()
 
-	console.log(extraction)
-	
 	const date_obj = new Date(Date.parse(extraction))
 	
 	return date_obj.toLocaleDateString('en-GB', {
@@ -192,10 +190,10 @@ export function extract_refer_name(data) {
     try {
 
     return data
-	.match(/Requesting Doctor.*Consultant in charge/)[0]
+	.match(/Requesting Doctor.*Consultant in Charge/)[0]
 	.replace('Requesting Doctor:', '')
-	.replace('Consultant in charge', '')
-	.replace(', ','').trim();
+	.replace('Consultant in Charge', '')
+	.replace(' , ',', ').trim();
 
     } catch { return "" }
 
