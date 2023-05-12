@@ -66,7 +66,7 @@ function extract_forename(data) {
 
 	const names = extract_names(data)
 
-	return names[1];
+	return names[1].trim();
 
     } catch { return "" }
     
@@ -88,9 +88,10 @@ export function extract_dob(data) {
     try {
 
 	const extraction = data
-	    .match(/DOB.*Age/)[0]
-	    .replace('DOB','')
-	      .replace('Age','').trim()
+	      .match(/DOB.*Age/)[0]
+	      .replace('DOB','')
+	      .replace('Age','')
+	      .replace(',','').trim()
 
 	const date_obj = new Date(Date.parse(extraction))
 	
@@ -108,8 +109,9 @@ export function extract_dob(data) {
 function extract_phones(data) {
     
     return data.match(/Telephone.*Hospital/)[0]
-	  .replace('Telephone:','')
-	  .replace('Hospital:','').trim();
+	.replace('Telephone:','')
+	.replace('Hospital:','')
+	.replace(',','').trim();
     
 }
 
@@ -189,11 +191,13 @@ export function extract_refer_name(data) {
 
     try {
 
-    return data
-	.match(/Requesting Doctor.*Consultant in Charge/)[0]
-	.replace('Requesting Doctor:', '')
-	.replace('Consultant in Charge', '')
-	.replace(' , ',', ').trim();
+	const names = data
+	      .match(/Requesting Doctor.*Consultant in Charge/)[0]
+	      .replace('Requesting Doctor:', '')
+	      .replace('Consultant in Charge', '').trim()
+	      .split(',')
+
+	return names[1].trim() + " " + names[0].trim()
 
     } catch { return "" }
 
@@ -255,9 +259,10 @@ function extract_gp(data) {
     try {
 
     return data
-	.match(/Practice.*_/)[0]
-	.replace('Practice:','')
-	.replace(/,.*/,'').trim();
+	    .match(/Practice.*_/)[0]
+	    .replace('Practice:','')
+	    .replace(/,.*/,'')
+	    .trim();
 
     } catch { return "" }
     

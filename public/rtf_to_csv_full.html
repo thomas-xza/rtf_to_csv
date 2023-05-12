@@ -1,3 +1,75 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="./css/normalize.css">
+
+<style>
+  
+body {
+    /* color: white; */
+    /* background-color: black; */
+}
+
+.cols {
+    columns: 2;
+}
+
+textarea {
+    width: 100%;
+    font-family:monospace;
+    margin: 1em 0;
+}
+
+textarea.short {
+    height: 3em;
+}
+
+textarea.long {
+    height: 20em;
+}
+
+button {
+
+    margin: 0 0 1em 0;
+
+}
+</style>
+<!-- <link rel="stylesheet" href="./css/stylize.css"> -->
+
+<title>RTF-to-CSV v1.0</title>
+
+</head>
+
+<body>
+
+  <h1>RTF-to-CSV v1.0</h1>
+    <h2><strong>How this works</strong></h2>
+
+    1. Select/input the CSV template that the data is to be fit into, or leave it as the default as of 2023 (note: if you make changes, the header names <em>must</em> match the current ones).   
+    <br><br>
+
+    2. Select the <code>*.rtf</code> file(s) via "Choose files" button that are to be converted to fit the template (can be multiple files) and confirm selection.
+    <br><br>
+
+    3. The CSV will be automatically generated and downloaded, which should contain 1 row per RTF file provided, and be openable with spreadsheet software.
+
+    <br><br>
+
+    <strong>Privacy notice:</strong> all data processing is done solely on the computer running this <em>intentionally offline</em> website, via client-side Javascript engines available within any modern web browser.
+    <br>No data is ever stored within the browser after exit (e.g. using localStorage), or transmitted over any network connection.
+    <br>The offline nature can be verified on Google Chrome or Microsoft Edge (Edge is nowadays based on Google's Chromium) by pressing F12, choosing "Network", and adjusting headers to show "Domain" and "Protocol", or by simply disconnecting the computer from internet/network after loading this page.
+    <br><br>
+
+    <em><a href="https://www.howjavascriptworks.com/sample.html">Javascript</a> programmed by Thomas. Framework by <a href="https://react.dev/">React.js</a> v18.2. Bundling by <a href="https://rollupjs.org/">Rollup.js</a> v3.21.</em>
+    <br><br><br>
+
+    <div id="root"></div>
+    <script>
 (function () {
 	'use strict';
 
@@ -8177,7 +8249,7 @@
 	function extract_forename(data) {
 	  try {
 	    var names = extract_names(data);
-	    return names[1].trim();
+	    return names[1];
 	  } catch (_unused2) {
 	    return "";
 	  }
@@ -8427,3 +8499,9 @@
 	createRoot(document.getElementById('root')).render( /*#__PURE__*/React.createElement(App, null));
 
 })();
+
+    </script>
+  
+</body>
+
+</html>

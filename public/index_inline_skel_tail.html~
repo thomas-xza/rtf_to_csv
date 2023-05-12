@@ -69,7 +69,10 @@ button {
     <br><br><br>
 
     <div id="root"></div>
-    <script src="./javascript/bundle.js"></script>
+    <script>
+
+
+    </script>
   
 </body>
 

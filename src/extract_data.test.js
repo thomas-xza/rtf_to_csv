@@ -44,7 +44,7 @@ test('ref_name', () => {
 	)
     )
 	.toBe(
-	    'Bell, Madeleine'
+	    'Madeleine Bell'
 	);
 });
 
