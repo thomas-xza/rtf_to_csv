@@ -41,22 +41,45 @@ test('dob', () => {
 test('ref_name', () => { 
     expect(
 	extract_refer_name(
-	    'Requesting Doctor: Bell , MadeleineConsultant in Charge'
+	    'Requesting Doctor: Bell , HillaryConsultant in Charge'
 	)
     )
 	.toBe(
-	    'Madeleine Bell'
+	    'Hillary Bell'
 	);
 });
 
 test('fullname', () => { 
     expect(
 	extract_refer_name(
-	    'Requesting Doctor: Bell , MadeleineConsultant in Charge'
+	    ''
 	)
     )
 	.toBe(
-	    'Madeleine Bell'
+	    ''
+	);
+});
+
+test('ref_name 2', () => { 
+    expect(
+	extract_refer_name(
+	    'Requesting Doctor: SUPATA MILVO, LIN REBEQAConsultant in Charge'
+	)
+    )
+	.toBe(
+	    'Lin Rebeqa Supata Milvo'
+	);
+});
+
+
+test('fullname', () => { 
+    expect(
+	extract_fullname(
+	    'Name:JEREMY, NICOLA JACKSex:'
+	)
+    )
+	.toBe(
+	    'Nicola Jack Jeremy'
 	);
 });
 

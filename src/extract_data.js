@@ -56,6 +56,7 @@ export function extract_fullname(data) {
 
 	const names = extract_names(data)
 
+	console.log(title_case(names[1].trim() + " " + names[0]))
 	return title_case(names[1].trim() + " " + names[0]);
 
     } catch { return "" }
