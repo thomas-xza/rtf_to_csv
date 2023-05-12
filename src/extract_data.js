@@ -44,9 +44,9 @@ export function extract_data_from_rtf(obj, data) {
 export function extract_names(data) {
 
     return data.match(/Name:.*Sex:/)[0]
-	  .replace('Name:','')
+	.replace('Name:','')
 	.replace('Sex:', '').trim()
-	  .split(',');
+	.split(',');
 
 }
 
@@ -68,7 +68,7 @@ export function extract_forename(data) {
 
 	const names = extract_names(data);
 
-	return names[1].trim();
+	return title_case(names[1].trim());
 
     } catch { return "" }
     
@@ -80,7 +80,7 @@ export function extract_surname(data) {
 
 	const names = extract_names(data);
     
-	return names[0];
+	return title_case(names[0]);
 
     } catch { return "" }
 }

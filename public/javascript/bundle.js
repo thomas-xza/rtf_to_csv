@@ -8178,7 +8178,7 @@
 	function extract_forename(data) {
 	  try {
 	    var names = extract_names(data);
-	    return names[1].trim();
+	    return title_case(names[1].trim());
 	  } catch (_unused2) {
 	    return "";
 	  }
@@ -8186,7 +8186,7 @@
 	function extract_surname(data) {
 	  try {
 	    var names = extract_names(data);
-	    return names[0];
+	    return title_case(names[0]);
 	  } catch (_unused3) {
 	    return "";
 	  }
@@ -8385,7 +8385,7 @@
 	}
 
 	function App() {
-	  var non_mat_csv_header = 'DATE,FORENAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,GP';
+	  var non_mat_csv_header = 'DATE,PLACEHOLDER,FORENAME,SURNAME,ADDRESS,PLACEHOLDER,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,PLACEHOLDER,REFERRER NAME,GP';
 	  var mat_csv_header = 'FULLNAME,REF DATE_STR,PLACEHOLDER,REF DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,PLACEHOLDER,PLACEHOLDER,PLACEHOLDER,GP';
 	  var _useState = reactExports.useState(non_mat_csv_header),
 	    _useState2 = _slicedToArray(_useState, 2),
