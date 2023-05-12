@@ -235,7 +235,7 @@ export function extract_refer_date_str(data) {
 
 	const refer_date_str = extract_refer_date(data)
 
-	return "- " + refer_date_str
+	return "_" + refer_date_str
 			     
     } catch { return "" }
 

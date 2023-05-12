@@ -8159,6 +8159,7 @@
 	    'REFERRER NAME': extract_refer_name(data),
 	    'REFERRING DEPT/ORG': extract_refer_dept(data),
 	    'REF DATE': extract_refer_date(data),
+	    'REF DATE_STR': extract_refer_date_str(data),
 	    'REF DATE_MONTH': extract_refer_date_month(data),
 	    'GP': extract_gp(data)
 	  });
@@ -8273,20 +8274,28 @@
 	    return "";
 	  }
 	}
+	function extract_refer_date_str(data) {
+	  try {
+	    var refer_date_str = extract_refer_date(data);
+	    return "_" + refer_date_str;
+	  } catch (_unused12) {
+	    return "";
+	  }
+	}
 	function extract_refer_date_month(data) {
 	  try {
 	    var date_obj = new Date(Date.parse(extract_refer_date_generic(data)));
 	    return date_obj.toLocaleDateString('en-GB', {
 	      month: 'long'
 	    }).toUpperCase();
-	  } catch (_unused12) {
+	  } catch (_unused13) {
 	    return "";
 	  }
 	}
 	function extract_gp(data) {
 	  try {
 	    return data.match(/Practice.*_/)[0].replace('Practice:', '').replace(/,.*/, '').trim();
-	  } catch (_unused13) {
+	  } catch (_unused14) {
 	    return "";
 	  }
 	}
@@ -8372,7 +8381,7 @@
 
 	function App() {
 	  var non_mat_csv_header = 'DATE,FORENAME,SURNAME,ADDRESS,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,REFERRER NAME,GP';
-	  var mat_csv_header = 'FULLNAME,REF DATE,PLACEHOLDER,REF DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,REFERRING TEAM,PLACEHOLDER,PLACEHOLDER,GP';
+	  var mat_csv_header = 'FULLNAME,REF DATE_STR,PLACEHOLDER,REF DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,REFERRING TEAM,PLACEHOLDER,PLACEHOLDER,GP';
 	  var _useState = reactExports.useState(non_mat_csv_header),
 	    _useState2 = _slicedToArray(_useState, 2),
 	    csv_header = _useState2[0],
