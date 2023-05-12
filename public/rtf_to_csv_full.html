@@ -8242,7 +8242,8 @@ button {
 	function extract_fullname(data) {
 	  try {
 	    var names = extract_names(data);
-	    return names[1].trim() + " " + names[0];
+	    console.log(title_case(names[1].trim() + " " + names[0]));
+	    return title_case(names[1].trim() + " " + names[0]);
 	  } catch (_unused) {
 	    return "";
 	  }
@@ -8326,7 +8327,7 @@ button {
 	function extract_refer_name(data) {
 	  try {
 	    var names = data.match(/Requesting Doctor.*Consultant in Charge/)[0].replace('Requesting Doctor:', '').replace('Consultant in Charge', '').trim().split(',');
-	    return names[1].trim() + " " + names[0].trim();
+	    return title_case(names[1].trim() + " " + names[0].trim());
 	  } catch (_unused10) {
 	    return "";
 	  }
@@ -8370,6 +8371,11 @@ button {
 	  } catch (_unused14) {
 	    return "";
 	  }
+	}
+	function title_case(str) {
+	  return str.toLowerCase().split(' ').map(function (word) {
+	    return word.charAt(0).toUpperCase() + word.slice(1);
+	  }).join(' ');
 	}
 
 	function process_data(loaded_files, csv_header) {

@@ -8294,7 +8294,7 @@
 	}
 	function extract_gp(data) {
 	  try {
-	    return data.match(/Practice.*_/)[0].replace('Practice:', '').replace(/,.*/, '').trim();
+	    return title_case(data.match(/Practice.*_/)[0].replace('Practice:', '').replace(/,.*/, '').trim());
 	  } catch (_unused14) {
 	    return "";
 	  }

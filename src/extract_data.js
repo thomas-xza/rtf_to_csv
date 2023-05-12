@@ -36,7 +36,7 @@ export function extract_data_from_rtf(obj, data) {
 
 	     'REF DATE_MONTH': extract_refer_date_month(data),
 
-	     'GP': extract_gp(data) }
+	     'GP': extract_gp(data) };
     
 };
 
@@ -54,9 +54,8 @@ export function extract_fullname(data) {
 
     try {
 
-	const names = extract_names(data)
+	const names = extract_names(data);
 
-	console.log(title_case(names[1].trim() + " " + names[0]))
 	return title_case(names[1].trim() + " " + names[0]);
 
     } catch { return "" }
@@ -67,7 +66,7 @@ export function extract_forename(data) {
 
     try {
 
-	const names = extract_names(data)
+	const names = extract_names(data);
 
 	return names[1].trim();
 
@@ -79,9 +78,9 @@ export function extract_surname(data) {
 
     try {
 
-    const names = extract_names(data)
+	const names = extract_names(data);
     
-    return names[0];
+	return names[0];
 
     } catch { return "" }
 }
@@ -94,14 +93,14 @@ export function extract_dob(data) {
 	      .match(/DOB.*Age/)[0]
 	      .replace('DOB','')
 	      .replace('Age','')
-	      .replace(',','').trim()
+	      .replace(',','').trim();
 
-	const date_obj = new Date(Date.parse(extraction))
+	const date_obj = new Date(Date.parse(extraction));
 	
 	return date_obj.toLocaleDateString('en-GB', {
                      year: 'numeric',
                      month: '2-digit',
-            day: '2-digit' })
+            day: '2-digit' });
 	
     // return data.match(/DOB.*Age/)[0].trim();
     
@@ -122,10 +121,10 @@ export function extract_mobile(data) {
 
     try {
 
-    const phones = extract_phones(data)
+	const phones = extract_phones(data);
 
-    return phones.match(/Mobile = [0-9]*/)[0]
-	.replace('Mobile = ','').trim();
+	return phones.match(/Mobile = [0-9]*/)[0]
+	    .replace('Mobile = ','').trim();
 
     } catch { return "" }
     
@@ -135,10 +134,10 @@ export function extract_hometel(data) {
 
     try {
 
-    const phones = extract_phones(data)
+	const phones = extract_phones(data);
 
-    return phones.match(/Home = [0-9]*/)[0]
-	.replace('Home = ', '').trim();
+	return phones.match(/Home = [0-9]*/)[0]
+	    .replace('Home = ', '').trim();
 
     } catch { return "" }
     
@@ -157,9 +156,9 @@ export function extract_addr_line(data) {
 
     try {
 
-    const addr = extract_addr(data)
+	const addr = extract_addr(data);
 
-    return addr[0].trim();
+	return addr[0].trim();
     
     } catch { return "" }
 }
@@ -168,9 +167,9 @@ export function extract_postcode(data) {
 
     try {
 
-    const addr = extract_addr(data)
+	const addr = extract_addr(data);
 
-    return addr.slice(-1)[0].trim();
+	return addr.slice(-1)[0].trim();
 
     } catch { return "" }
     
@@ -198,9 +197,9 @@ export function extract_refer_name(data) {
 	      .match(/Requesting Doctor.*Consultant in Charge/)[0]
 	      .replace('Requesting Doctor:', '')
 	      .replace('Consultant in Charge', '').trim()
-	      .split(',')
+	      .split(',');
 
-	return title_case(names[1].trim() + " " + names[0].trim())
+	return title_case(names[1].trim() + " " + names[0].trim());
 
     } catch { return "" }
 
@@ -212,7 +211,7 @@ export function extract_refer_date_generic(data) {
 	    .match(/Requested on.*Patient Name/)[0]
 	    .replace('Requested on :','')
 	    .replace('Patient Name','').trim()
-	    .split(',')[0]
+	.split(',')[0];
 	
 }    
 
@@ -221,10 +220,10 @@ export function extract_refer_date(data) {
     try {
 
 	const date_obj = new
-	Date(Date.parse(extract_refer_date_generic(data)))
+	Date(Date.parse(extract_refer_date_generic(data)));
 	
 	return date_obj.toLocaleDateString('en-GB', { year: 'numeric',
-                     month: '2-digit', day: '2-digit'})
+						      month: '2-digit', day: '2-digit'});
 			     
     } catch { return "" }
 
@@ -234,9 +233,9 @@ export function extract_refer_date_str(data) {
 
     try {
 
-	const refer_date_str = extract_refer_date(data)
+	const refer_date_str = extract_refer_date(data);
 
-	return "_" + refer_date_str
+	return "_" + refer_date_str;
 			     
     } catch { return "" }
 
@@ -246,11 +245,11 @@ export function extract_refer_date_month(data) {
 
     try {
 
-	const date_obj = new Date(Date.parse(extract_refer_date_generic(data)))
+	const date_obj = new Date(Date.parse(extract_refer_date_generic(data)));
 	
 	return date_obj.toLocaleDateString('en-GB', {
                      month: 'long'
-        }).toUpperCase()
+        }).toUpperCase();
 		     
     } catch { return "" }
 
@@ -264,7 +263,7 @@ export function convert_date_to_obj(date) {
 	    year: 'numeric',
 	    month: '2-digit',
 	    day: '2-digit'
-	})
+    });
 
 }
 
@@ -272,11 +271,11 @@ export function extract_gp(data) {
 
     try {
 
-    return data
-	    .match(/Practice.*_/)[0]
-	    .replace('Practice:','')
-	    .replace(/,.*/,'')
-	    .trim();
+	return title_case(data
+			  .match(/Practice.*_/)[0]
+			  .replace('Practice:','')
+			  .replace(/,.*/,'')
+			  .trim());
 
     } catch { return "" }
     
