@@ -2,7 +2,8 @@ import { extract_dob,
 	 extract_fullname,
 	 extract_refer_date_month,
 	 extract_refer_date,
-	 extract_refer_name } from './extract_data.js';
+	 extract_refer_name,
+	 extract_maternity_type} from './extract_data.js';
 
 test('date_ddmmyyyy', () => { 
     expect(
@@ -83,3 +84,25 @@ test('fullname', () => {
 	);
 });
 
+
+test('maternity type male', () => { 
+    expect(
+	extract_maternity_type(
+	    'Sex: MaleDOB'
+	)
+    )
+	.toBe(
+	    'Partner'
+	);
+});
+
+test('maternity type female', () => { 
+    expect(
+	extract_maternity_type(
+	    'Sex: FemaleDOB'
+	)
+    )
+	.toBe(
+	    'Pregnant'
+	);
+});

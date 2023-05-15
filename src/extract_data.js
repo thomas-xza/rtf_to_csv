@@ -36,7 +36,9 @@ export function extract_data_from_rtf(obj, data) {
 
 	     'REF DATE_MONTH': extract_refer_date_month(data),
 
-	     'GP': extract_gp(data) };
+	     'GP': extract_gp(data),
+    
+	     'TYPE': extract_maternity_type(data) };
     
 };
 
@@ -285,6 +287,39 @@ export function extract_gp(data) {
 
     } catch { return "" }
     
+}
+
+export function extract_gender(data) {
+
+    try {
+
+	return data.match(/Sex:.*DOB/)[0]
+	    .replace('Sex: ','')
+	    .replace('DOB','');
+
+    } catch { return "" }
+
+}
+
+export function extract_maternity_type(data) {
+
+    try {
+
+	const gender = extract_gender(data);
+
+	console.log("gender", gender);
+
+	if ( gender.toLowerCase() === "female" ) {
+
+	    return "Pregnant"
+
+	} else {
+
+	    return "Partner"
+
+	}
+	
+    } catch { return "" }
 }
 
 export function title_case(str) {

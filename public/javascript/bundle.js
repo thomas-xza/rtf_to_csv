@@ -8161,7 +8161,8 @@
 	    'REF DATE': extract_refer_date(data),
 	    'REF DATE_STR': extract_refer_date_str(data),
 	    'REF DATE_MONTH': extract_refer_date_month(data),
-	    'GP': extract_gp(data)
+	    'GP': extract_gp(data),
+	    'TYPE': extract_maternity_type(data)
 	  });
 	}
 	function extract_names(data) {
@@ -8246,7 +8247,11 @@
 	}
 	function extract_refer_dept(data) {
 	  try {
-	    return data.match(/Referring Speciality.*Other/)[0].replace('Referring Speciality', '').replace('Other', '').replace(',', '').trim();
+	    if (data.includes("TDT")) {
+	      return "TDT";
+	    } else {
+	      return data.match(/Referring Speciality.*Other/)[0].replace('Referring Speciality', '').replace('Other', '').replace(',', '').trim();
+	    }
 	  } catch (_unused9) {
 	    return "";
 	  }
@@ -8296,6 +8301,26 @@
 	  try {
 	    return title_case(data.match(/Practice.*_/)[0].replace('Practice:', '').replace(/,.*/, '').trim());
 	  } catch (_unused14) {
+	    return "";
+	  }
+	}
+	function extract_gender(data) {
+	  try {
+	    return data.match(/Sex:.*DOB/)[0].replace('Sex: ', '').replace('DOB', '');
+	  } catch (_unused15) {
+	    return "";
+	  }
+	}
+	function extract_maternity_type(data) {
+	  try {
+	    var gender = extract_gender(data);
+	    console.log("gender", gender);
+	    if (gender.toLowerCase() === "female") {
+	      return "Pregnant";
+	    } else {
+	      return "Partner";
+	    }
+	  } catch (_unused16) {
 	    return "";
 	  }
 	}
@@ -8386,7 +8411,7 @@
 
 	function App() {
 	  var non_mat_csv_header = 'DATE,PLACEHOLDER,FORENAME,SURNAME,ADDRESS,PLACEHOLDER,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,PLACEHOLDER,REFERRER NAME,GP';
-	  var mat_csv_header = 'FULLNAME,REF DATE_STR,PLACEHOLDER,REF DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,PLACEHOLDER,PLACEHOLDER,PLACEHOLDER,GP';
+	  var mat_csv_header = 'FULLNAME,REF DATE_STR,PLACEHOLDER,REF DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,PLACEHOLDER,PLACEHOLDER,TYPE,GP';
 	  var _useState = reactExports.useState(non_mat_csv_header),
 	    _useState2 = _slicedToArray(_useState, 2),
 	    csv_header = _useState2[0],
