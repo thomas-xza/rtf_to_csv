@@ -179,7 +179,7 @@ export function extract_refer_dept(data) {
 
     try {
 
-	if data.includes("TDT") { return "TDT" }
+	if ( data.includes("TDT") ) { return "TDT" }
 
 	else {
 
