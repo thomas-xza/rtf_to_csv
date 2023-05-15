@@ -179,11 +179,17 @@ export function extract_refer_dept(data) {
 
     try {
 
-    return data
-	.match(/Referring Speciality.*Other/)[0]
-	.replace('Referring Speciality','')
-	.replace('Other','')
-	.replace(',','').trim();
+	if data.includes("TDT") { return "TDT" }
+
+	else {
+
+	    return data
+		.match(/Referring Speciality.*Other/)[0]
+		.replace('Referring Speciality','')
+		.replace('Other','')
+		.replace(',','').trim();
+
+	    }
 
     } catch { return "" }
     
