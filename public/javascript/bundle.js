@@ -8162,6 +8162,7 @@
 	    'REF DATE_STR': extract_refer_date_str(data),
 	    'REF DATE_MONTH': extract_refer_date_month(data),
 	    'GP': extract_gp(data),
+	    'CO READING': extract_co_reading(data),
 	    'TYPE': extract_maternity_type(data)
 	  });
 	}
@@ -8324,6 +8325,13 @@
 	    return "";
 	  }
 	}
+	function extract_co_reading(data) {
+	  try {
+	    return title_case(data.match(/Carbon Monoxide Reading.*Referral Smoking Comment/)[0].replace('Carbon Monoxide Reading', '').replace('Referral Smoking Comment', '').trim());
+	  } catch (_unused17) {
+	    return "";
+	  }
+	}
 	function title_case(str) {
 	  return str.toLowerCase().split(' ').map(function (word) {
 	    return word.charAt(0).toUpperCase() + word.slice(1);
@@ -8411,7 +8419,7 @@
 
 	function App() {
 	  var non_mat_csv_header = 'DATE,PLACEHOLDER,FORENAME,SURNAME,ADDRESS,PLACEHOLDER,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,PLACEHOLDER,REFERRER NAME,GP';
-	  var mat_csv_header = 'FULLNAME,REF DATE_STR,PLACEHOLDER,REF DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,PLACEHOLDER,PLACEHOLDER,TYPE,GP';
+	  var mat_csv_header = 'FULLNAME,REF DATE_STR,CO READING,REF DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,PLACEHOLDER,PLACEHOLDER,TYPE,GP';
 	  var _useState = reactExports.useState(non_mat_csv_header),
 	    _useState2 = _slicedToArray(_useState, 2),
 	    csv_header = _useState2[0],

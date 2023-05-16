@@ -8236,6 +8236,7 @@ button {
 	    'REF DATE_STR': extract_refer_date_str(data),
 	    'REF DATE_MONTH': extract_refer_date_month(data),
 	    'GP': extract_gp(data),
+	    'CO READING': extract_co_reading(data),
 	    'TYPE': extract_maternity_type(data)
 	  });
 	}
@@ -8395,6 +8396,13 @@ button {
 	      return "Partner";
 	    }
 	  } catch (_unused16) {
+	    return "";
+	  }
+	}
+	function extract_co_reading(data) {
+	  try {
+	    return title_case(data.match(/Carbon Monoxide Reading.*Referral Smoking Comment/)[0].replace('Carbon Monoxide Reading', '').replace('Referral Smoking Comment', '').trim());
+	  } catch (_unused17) {
 	    return "";
 	  }
 	}
