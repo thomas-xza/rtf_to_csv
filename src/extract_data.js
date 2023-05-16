@@ -334,7 +334,7 @@ export function extract_co_reading(data) {
 			  .replace('Referral Smoking Comment','')
 			  .trim());
 
-    } else {
+    } catch {
 
 	return ""
 

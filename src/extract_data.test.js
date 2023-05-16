@@ -3,7 +3,8 @@ import { extract_dob,
 	 extract_refer_date_month,
 	 extract_refer_date,
 	 extract_refer_name,
-	 extract_maternity_type} from './extract_data.js';
+	 extract_maternity_type,
+	 extract_co_reading } from './extract_data.js';
 
 test('date_ddmmyyyy', () => { 
     expect(
@@ -104,5 +105,17 @@ test('maternity type female', () => {
     )
 	.toBe(
 	    'Pregnant'
+	);
+});
+
+
+test('co reading', () => { 
+    expect(
+	extract_co_reading(
+	    'Carbon Monoxide Reading3Referral Smoking Comment'
+	)
+    )
+	.toBe(
+	    '3'
 	);
 });
