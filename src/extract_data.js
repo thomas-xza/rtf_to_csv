@@ -37,6 +37,8 @@ export function extract_data_from_rtf(obj, data) {
 	     'REF DATE_MONTH': extract_refer_date_month(data),
 
 	     'GP': extract_gp(data),
+
+	     'CO READING': extract_co_reading(data),
     
 	     'TYPE': extract_maternity_type(data) };
     
@@ -320,6 +322,24 @@ export function extract_maternity_type(data) {
 	}
 	
     } catch { return "" }
+}
+
+export function extract_co_reading(data) {
+
+    try {
+
+	return title_case(data
+			  .match(/Carbon Monoxide Reading.*Referral Smoking Comment/)[0]
+			  .replace('Carbon Monoxide Reading','')
+			  .replace('Referral Smoking Comment','')
+			  .trim());
+
+    } else {
+
+	return ""
+
+    }
+    
 }
 
 export function title_case(str) {
