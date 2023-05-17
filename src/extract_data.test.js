@@ -119,3 +119,15 @@ test('co reading', () => {
 	    '3'
 	);
 });
+
+
+test('co reading 2', () => { 
+    expect(
+	extract_co_reading(
+	    'Carbon Monoxide Reading19'
+	)
+    )
+	.toBe(
+	    '19'
+	);
+});

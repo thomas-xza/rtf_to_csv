@@ -329,7 +329,7 @@ export function extract_co_reading(data) {
     try {
 
 	return title_case(data
-			  .match(/Carbon Monoxide Reading.*Referral Smoking Comment/)[0]
+			  .match(/Carbon Monoxide Reading.*($|Referral Smoking Comment)/)[0]
 			  .replace('Carbon Monoxide Reading','')
 			  .replace('Referral Smoking Comment','')
 			  .trim());
