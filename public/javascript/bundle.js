@@ -8154,6 +8154,7 @@
 	    'DOB': extract_dob(data),
 	    'MOB': extract_mobile(data),
 	    'TEL': extract_hometel(data),
+	    'ALL TEL': extract_all_tel(data),
 	    'ADDRESS': extract_addr_line(data),
 	    'POST CODE': extract_postcode(data),
 	    'REFERRER NAME': extract_refer_name(data),
@@ -8214,7 +8215,7 @@
 	function extract_mobile(data) {
 	  try {
 	    var phones = extract_phones(data);
-	    return phones.match(/Mobile = [0-9]*/)[0].replace('Mobile = ', '').trim();
+	    return phones.match(/Mobile = [0-9 ]*/)[0].replace('Mobile = ', '').trim();
 	  } catch (_unused5) {
 	    return "";
 	  }
@@ -8222,10 +8223,13 @@
 	function extract_hometel(data) {
 	  try {
 	    var phones = extract_phones(data);
-	    return phones.match(/Home = [0-9]*/)[0].replace('Home = ', '').trim();
+	    return phones.match(/Home = [0-9 ]*/)[0].replace('Home = ', '').trim();
 	  } catch (_unused6) {
 	    return "";
 	  }
+	}
+	function extract_all_tel(data) {
+	  return extract_mobile(data) + " " + extract_hometel(data);
 	}
 	function extract_addr(data) {
 	  return data.match(/Address.*Patient Telephone/)[0].replace('Address:', '').replace('Patient Telephone', '').split(',');
@@ -8251,7 +8255,7 @@
 	    if (data.includes("TDT")) {
 	      return "TDT";
 	    } else {
-	      return data.match(/Referring Speciality.*Other/)[0].replace('Referring Speciality', '').replace('Other', '').replace(',', '').trim();
+	      return data.match(/Referring Speciality.*(Other|Referral)/)[0].replace('Referring Speciality', '').replace('Other', '').replace('Referral', '').replace(',', '').trim();
 	    }
 	  } catch (_unused9) {
 	    return "";
@@ -8327,7 +8331,7 @@
 	}
 	function extract_co_reading(data) {
 	  try {
-	    return title_case(data.match(/Carbon Monoxide Reading.*($|Referral Smoking Comment)/)[0].replace('Carbon Monoxide Reading', '').replace('Referral Smoking Comment', '').trim());
+	    return title_case(data.match(/Carbon Monoxide Reading[0-9]*/)[0].replace('Carbon Monoxide Reading', '').match(/^[0-9]{1,2}/)[0].trim());
 	  } catch (_unused17) {
 	    return "";
 	  }
@@ -8419,7 +8423,7 @@
 
 	function App() {
 	  var non_mat_csv_header = 'DATE,PLACEHOLDER,FORENAME,SURNAME,ADDRESS,PLACEHOLDER,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,PLACEHOLDER,REFERRER NAME,GP';
-	  var mat_csv_header = 'FULLNAME,REF DATE_STR,PLACEHOLDER,REF DATE_MONTH,MOB,DOB,POST CODE,CO READING,REFERRER NAME,PLACEHOLDER,PLACEHOLDER,TYPE,GP';
+	  var mat_csv_header = 'FULLNAME,REF DATE_STR,PLACEHOLDER,REF DATE_MONTH,ALL TEL,DOB,POST CODE,CO READING,REFERRER NAME,PLACEHOLDER,PLACEHOLDER,TYPE,GP';
 	  var _useState = reactExports.useState(non_mat_csv_header),
 	    _useState2 = _slicedToArray(_useState, 2),
 	    csv_header = _useState2[0],

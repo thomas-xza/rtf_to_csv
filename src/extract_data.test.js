@@ -1,10 +1,13 @@
 import { extract_dob,
+	 extract_hometel,
 	 extract_fullname,
 	 extract_refer_date_month,
 	 extract_refer_date,
 	 extract_refer_name,
+	 extract_refer_dept,
 	 extract_maternity_type,
 	 extract_co_reading } from './extract_data.js';
+
 
 test('date_ddmmyyyy', () => { 
     expect(
@@ -86,6 +89,17 @@ test('fullname', () => {
 });
 
 
+test('hometel', () => { 
+    expect(
+	extract_hometel(
+	    'Patient Telephone:Home = 0208 555 7777, Mobile = 07555111000Hospital'
+	)
+    )
+	.toBe(
+	    '0208 555 7777'
+	);
+});
+
 test('maternity type male', () => { 
     expect(
 	extract_maternity_type(
@@ -133,14 +147,26 @@ test('co reading 2', () => {
 });
 
 
-test('refer dept', () => { 
+test('co reading 3', () => { 
     expect(
 	extract_co_reading(
+	    'Carbon Monoxide Reading10Referral Smoking CommentReports stopping smoking a week ago'
+	)
+    )
+	.toBe(
+	    '10'
+	);
+});
+
+
+test('refer dept', () => { 
+    expect(
+	extract_refer_dept(
 	    'Referring SpecialityRespiratoryReferral Smoking Comment'
 	)
     )
 	.toBe(
-	    '19'
+	    'Respiratory'
 	);
 });
 

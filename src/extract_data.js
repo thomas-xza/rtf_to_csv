@@ -22,6 +22,8 @@ export function extract_data_from_rtf(obj, data) {
 
 	     'TEL': extract_hometel(data),
 
+	     'ALL TEL': extract_all_tel(data),
+
 	     'ADDRESS': extract_addr_line(data),
 
 	     'POST CODE': extract_postcode(data),
@@ -127,7 +129,7 @@ export function extract_mobile(data) {
 
 	const phones = extract_phones(data);
 
-	return phones.match(/Mobile = [0-9]*/)[0]
+	return phones.match(/Mobile = [0-9 ]*/)[0]
 	    .replace('Mobile = ','').trim();
 
     } catch { return "" }
@@ -140,11 +142,17 @@ export function extract_hometel(data) {
 
 	const phones = extract_phones(data);
 
-	return phones.match(/Home = [0-9]*/)[0]
+	return phones.match(/Home = [0-9 ]*/)[0]
 	    .replace('Home = ', '').trim();
 
     } catch { return "" }
     
+}
+
+export function extract_all_tel(data) {
+
+    return extract_mobile(data) + " " + extract_hometel(data);
+
 }
 
 export function extract_addr(data) {
@@ -188,12 +196,13 @@ export function extract_refer_dept(data) {
 	else {
 
 	    return data
-		.match(/Referring Speciality.*Other/)[0]
+		.match(/Referring Speciality.*(Other|Referral)/)[0]
 		.replace('Referring Speciality','')
 		.replace('Other','')
+		.replace('Referral','')
 		.replace(',','').trim();
 
-	    }
+		    }
 
     } catch { return "" }
     
@@ -329,9 +338,9 @@ export function extract_co_reading(data) {
     try {
 
 	return title_case(data
-			  .match(/Carbon Monoxide Reading.*($|Referral Smoking Comment)/)[0]
+			  .match(/Carbon Monoxide Reading[0-9]*/)[0]
 			  .replace('Carbon Monoxide Reading','')
-			  .replace('Referral Smoking Comment','')
+			  .match(/^[0-9]{1,2}/)[0]
 			  .trim());
 
     } catch {
