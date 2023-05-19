@@ -131,3 +131,16 @@ test('co reading 2', () => {
 	    '19'
 	);
 });
+
+
+test('refer dept', () => { 
+    expect(
+	extract_co_reading(
+	    'Referring SpecialityRespiratoryReferral Smoking Comment'
+	)
+    )
+	.toBe(
+	    '19'
+	);
+});
+

@@ -41,13 +41,13 @@ button {
 </style>
 <!-- <link rel="stylesheet" href="./css/stylize.css"> -->
 
-<title>RTF-to-CSV v1.02</title>
+<title>RTF-to-CSV v1.03</title>
 
 </head>
 
 <body>
 
-  <h1>RTF-to-CSV v1.02</h1>
+  <h1>RTF-to-CSV v1.03</h1>
     <h2><strong>How this works</strong></h2>
 
     1. Select/input the CSV header template that the data is to be fit into, or leave it as the default as of 2023 (note: if you make changes, the header names <em>must</em> match the current ones).   
@@ -8401,7 +8401,7 @@ button {
 	}
 	function extract_co_reading(data) {
 	  try {
-	    return title_case(data.match(/Carbon Monoxide Reading.*Referral Smoking Comment/)[0].replace('Carbon Monoxide Reading', '').replace('Referral Smoking Comment', '').trim());
+	    return title_case(data.match(/Carbon Monoxide Reading.*($|Referral Smoking Comment)/)[0].replace('Carbon Monoxide Reading', '').replace('Referral Smoking Comment', '').trim());
 	  } catch (_unused17) {
 	    return "";
 	  }
@@ -8493,7 +8493,7 @@ button {
 
 	function App() {
 	  var non_mat_csv_header = 'DATE,PLACEHOLDER,FORENAME,SURNAME,ADDRESS,PLACEHOLDER,POST CODE,TEL,MOB,EMAIL,DOB,REFERRAL TYPE,REFERRAL SOURCE,REFERRING DEPT/ORG,PLACEHOLDER,REFERRER NAME,GP';
-	  var mat_csv_header = 'FULLNAME,REF DATE_STR,CO READING,REF DATE_MONTH,MOB,DOB,POST CODE,PLACEHOLDER,REFERRER NAME,PLACEHOLDER,PLACEHOLDER,TYPE,GP';
+	  var mat_csv_header = 'FULLNAME,REF DATE_STR,PLACEHOLDER,REF DATE_MONTH,MOB,DOB,POST CODE,CO READING,REFERRER NAME,PLACEHOLDER,PLACEHOLDER,TYPE,GP';
 	  var _useState = reactExports.useState(non_mat_csv_header),
 	    _useState2 = _slicedToArray(_useState, 2),
 	    csv_header = _useState2[0],
