@@ -130,7 +130,9 @@ export function extract_mobile(data) {
 	const phones = extract_phones(data);
 
 	return phones.match(/Mobile = [0-9 ]*/)[0]
-	    .replace('Mobile = ','').trim();
+	    .replace('Mobile = ','')
+	    .replaceAll(' ', '').trim()
+	    .match(/.{1,4}/g).join(" ");
 
     } catch { return "" }
     
@@ -143,7 +145,9 @@ export function extract_hometel(data) {
 	const phones = extract_phones(data);
 
 	return phones.match(/Home = [0-9 ]*/)[0]
-	    .replace('Home = ', '').trim();
+	    .replace('Home = ', '')
+	    .replaceAll(' ', '').trim()
+	    .match(/.{1,4}/g).join(" ");
 
     } catch { return "" }
     
@@ -151,7 +155,7 @@ export function extract_hometel(data) {
 
 export function extract_all_tel(data) {
 
-    return extract_mobile(data) + " " + extract_hometel(data);
+    return [ extract_mobile(data), extract_hometel(data) ].join(" - ");
 
 }
 

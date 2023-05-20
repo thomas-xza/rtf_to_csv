@@ -1,5 +1,6 @@
 import { extract_dob,
 	 extract_hometel,
+	 extract_all_tel,
 	 extract_fullname,
 	 extract_refer_date_month,
 	 extract_refer_date,
@@ -96,7 +97,18 @@ test('hometel', () => {
 	)
     )
 	.toBe(
-	    '0208 555 7777'
+	    '0208 5557 777'
+	);
+});
+
+test('alltel', () => { 
+    expect(
+	extract_all_tel(
+	    'Patient Telephone:Home = 0208 555 7777, Mobile = 07555111000Hospital'
+	)
+    )
+	.toBe(
+	    '0755 5111 000 - 0208 5557 777'
 	);
 });
 

@@ -8289,7 +8289,7 @@ button {
 	function extract_mobile(data) {
 	  try {
 	    var phones = extract_phones(data);
-	    return phones.match(/Mobile = [0-9]*/)[0].replace('Mobile = ', '').trim();
+	    return phones.match(/Mobile = [0-9 ]*/)[0].replace('Mobile = ', '').replaceAll(' ', '').trim().match(/.{1,4}/g).join(" ");
 	  } catch (_unused5) {
 	    return "";
 	  }
@@ -8297,13 +8297,13 @@ button {
 	function extract_hometel(data) {
 	  try {
 	    var phones = extract_phones(data);
-	    return phones.match(/Home = [0-9]*/)[0].replace('Home = ', '').trim();
+	    return phones.match(/Home = [0-9 ]*/)[0].replace('Home = ', '').replaceAll(' ', '').trim().match(/.{1,4}/g).join(" ");
 	  } catch (_unused6) {
 	    return "";
 	  }
 	}
 	function extract_all_tel(data) {
-	  return extract_mobile(data) + " " + extract_hometel(data);
+	  return [extract_mobile(data), extract_hometel(data)].join(" - ");
 	}
 	function extract_addr(data) {
 	  return data.match(/Address.*Patient Telephone/)[0].replace('Address:', '').replace('Patient Telephone', '').split(',');
